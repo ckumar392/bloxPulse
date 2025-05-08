@@ -232,8 +232,8 @@ func main() {
 
 	// Add command-line flag for offline mode
 	offlinePtr := flag.Bool("offline", false, "Use offline analysis mode instead of AI API")
-	inputFilePtr := flag.String("input", "scraped_reviews.json", "Path to input JSON file")
-	outputFilePtr := flag.String("output", "enriched_reviews.json", "Path to output JSON file")
+	inputFilePtr := flag.String("input", "../../scraped_reviews.json", "Path to input JSON file")
+	outputFilePtr := flag.String("output", "../../internal/scraper/front-end/src/assets/enriched_reviews.json", "Path to output JSON file")
 	flag.Parse()
 
 	// Define file path

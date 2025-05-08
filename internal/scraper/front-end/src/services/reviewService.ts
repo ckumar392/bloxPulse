@@ -1,7 +1,26 @@
 import { Review, ReviewStats, Platform, Department } from '../types/reviews';
 import { v4 as uuidv4 } from 'uuid';
+import enrichedReviewsData from '../assets/enriched_reviews.json';
 
-// Mock data for the review service
+// Define the structure of the enriched reviews data
+interface EnrichedReview {
+  id: number;
+  reviewID: number;
+  author: string;
+  platform: string;
+  title: string;
+  Postcontent: string;
+  replyContents: string;
+  timestamp: string;
+  tags: string[];
+  rating: number;
+  sentiment: string;
+  department: string;
+  product: string;
+  needsAction: boolean;
+}
+
+// Define mock reviews data
 const mockReviews: Review[] = [
   {
     id: uuidv4(),
@@ -110,14 +129,31 @@ const mockReviews: Review[] = [
   },
 ];
 
-// Mock stats based on the mock reviews
-const calculateMockStats = (): ReviewStats => {
-  const positiveCount = mockReviews.filter(r => r.sentiment === 'Positive').length;
-  const neutralCount = mockReviews.filter(r => r.sentiment === 'Neutral').length;
-  const negativeCount = mockReviews.filter(r => r.sentiment === 'Negative').length;
+// Transform the enriched reviews data to match the Review interface
+const actualReviews: Review[] = (enrichedReviewsData as EnrichedReview[]).map(review => ({
+  id: String(review.id), // Convert to string to match the interface
+  title: review.title,
+  content: review.Postcontent, // Map Postcontent to content
+  rating: review.rating,
+  date: review.timestamp, // Map timestamp to date
+  platform: review.platform as Platform,
+  sentiment: review.sentiment as 'Positive' | 'Neutral' | 'Negative',
+  department: review.department as Department,
+  author: review.author,
+  url: '', // No URL in the JSON data, set to empty string
+  highlights: [], // No highlights in the JSON data, set to empty array
+  tags: review.tags || [],
+  isProcessed: !review.needsAction // Inverse of needsAction
+}));
+
+// Calculate stats based on the actual reviews
+const calculateStats = (): ReviewStats => {
+  const positiveCount = actualReviews.filter(r => r.sentiment === 'Positive').length;
+  const neutralCount = actualReviews.filter(r => r.sentiment === 'Neutral').length;
+  const negativeCount = actualReviews.filter(r => r.sentiment === 'Negative').length;
   
-  const totalRating = mockReviews.reduce((sum, review) => sum + (review.rating || 0), 0);
-  const reviewsWithRating = mockReviews.filter(r => r.rating !== undefined).length;
+  const totalRating = actualReviews.reduce((sum, review) => sum + (review.rating || 0), 0);
+  const reviewsWithRating = actualReviews.filter(r => r.rating !== undefined).length;
   
   const byPlatform: Record<Platform, number> = {
     'G2': 0,
@@ -138,13 +174,13 @@ const calculateMockStats = (): ReviewStats => {
     'General': 0
   };
   
-  mockReviews.forEach(review => {
+  actualReviews.forEach(review => {
     byPlatform[review.platform]++;
     byDepartment[review.department]++;
   });
   
   return {
-    totalReviews: mockReviews.length,
+    totalReviews: actualReviews.length,
     positiveCount,
     neutralCount,
     negativeCount,
@@ -155,7 +191,7 @@ const calculateMockStats = (): ReviewStats => {
   };
 };
 
-const mockStats: ReviewStats = calculateMockStats();
+const mockStats: ReviewStats = calculateStats();
 
 // Simulate API delay
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
@@ -170,9 +206,9 @@ export const reviewService = {
   }): Promise<Review[]> => {
     await delay(800); // Simulate API delay
     
-    if (!filters) return mockReviews;
+    if (!filters) return actualReviews;
     
-    return mockReviews.filter(review => {
+    return actualReviews.filter(review => {
       if (filters.platform && review.platform !== filters.platform) return false;
       if (filters.department && review.department !== filters.department) return false;
       if (filters.sentiment && review.sentiment !== filters.sentiment) return false;
@@ -193,16 +229,16 @@ export const reviewService = {
   // Get a single review by ID
   getReviewById: async (id: string): Promise<Review | null> => {
     await delay(500); // Simulate API delay
-    return mockReviews.find(review => review.id === id) || null;
+    return actualReviews.find(review => review.id === id) || null;
   },
   
   // Update a review's processing status
   updateReviewStatus: async (id: string, isProcessed: boolean): Promise<Review | null> => {
     await delay(700); // Simulate API delay
-    const index = mockReviews.findIndex(review => review.id === id);
+    const index = actualReviews.findIndex(review => review.id === id);
     if (index !== -1) {
-      mockReviews[index] = { ...mockReviews[index], isProcessed };
-      return mockReviews[index];
+      actualReviews[index] = { ...actualReviews[index], isProcessed };
+      return actualReviews[index];
     }
     return null;
   },
