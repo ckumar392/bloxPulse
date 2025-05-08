@@ -128,16 +128,6 @@ const DashboardPage: React.FC = () => {
           <GradientText variant="h3">
             Dashboard
           </GradientText>
-          <Box>
-            <AnimatedButton
-              variant="contained"
-              color="secondary"
-              disabled={scrapingInProgress}
-              onClick={startScraping}
-            >
-              {scrapingInProgress ? 'Processing...' : 'Scrape New Reviews'}
-            </AnimatedButton>
-          </Box>
         </HeaderBox>
       </motion.div>
 
@@ -150,24 +140,48 @@ const DashboardPage: React.FC = () => {
           <Typography variant="h6" gutterBottom>
             Select Platforms to Scrape
           </Typography>
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', my: 1 }}>
-            {platforms.map((platform) => (
+          <Box sx={{ my: 1 }}>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
+              {platforms.map((platform, index) => (
+                <motion.div
+                  key={platform}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <PlatformButton
+                    variant={selectedPlatforms.includes(platform) ? "contained" : "outlined"}
+                    active={selectedPlatforms.includes(platform)}
+                    onClick={() => togglePlatform(platform)}
+                    disabled={scrapingInProgress}
+                  >
+                    {platform}
+                  </PlatformButton>
+                </motion.div>
+              ))}
+              
+              {/* Place the button directly after Twitter */}
               <motion.div
-                key={platform}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                style={{ marginLeft: '16px' }}
               >
-                <PlatformButton
-                  variant={selectedPlatforms.includes(platform) ? "contained" : "outlined"}
-                  active={selectedPlatforms.includes(platform)}
-                  onClick={() => togglePlatform(platform)}
-                  disabled={scrapingInProgress}
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  disabled={scrapingInProgress || selectedPlatforms.length === 0}
+                  onClick={startScraping}
+                  sx={{ 
+                    borderRadius: '20px',
+                    height: '36px',
+                    backgroundImage: 'linear-gradient(90deg, #8DC63F 0%, #0072C6 100%)'
+                  }}
                 >
-                  {platform}
-                </PlatformButton>
+                  {scrapingInProgress ? 'Processing...' : 'Scrape New Reviews'}
+                </Button>
               </motion.div>
-            ))}
+            </Box>
           </Box>
+          
           {successMessage && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
