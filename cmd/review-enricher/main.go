@@ -1,9 +1,8 @@
-package main
+package enricher
 
 import (
 	"bytes"
 	"encoding/json"
-	"flag"
 	"fmt"
 	"io"
 	"log"
@@ -218,7 +217,15 @@ var productNameMappings = map[string]string{
 	"network_services": "BloxOne DDI",
 }
 
-func main() {
+// EnrichOptions contains configuration options for the enricher
+type EnrichOptions struct {
+	InputFile   string
+	OutputFile  string
+	OfflineMode bool
+}
+
+// Run performs the enrichment operation with the given options
+func Run(options EnrichOptions) error {
 	log.Println("Starting Review Enrichment Process...")
 
 	// Load environment variables from .env file
@@ -230,15 +237,10 @@ func main() {
 		log.Println("Successfully loaded environment variables from .env file")
 	}
 
-	// Add command-line flag for offline mode
-	offlinePtr := flag.Bool("offline", false, "Use offline analysis mode instead of AI API")
-	inputFilePtr := flag.String("input", "../../scraped_reviews.json", "Path to input JSON file")
-	outputFilePtr := flag.String("output", "../../internal/scraper/front-end/src/assets/enriched_reviews.json", "Path to output JSON file")
-	flag.Parse()
-
-	// Define file path
-	inputFilePath := *inputFilePtr
-	outputFilePath := *outputFilePtr
+	// Define file paths
+	inputFilePath := options.InputFile
+	outputFilePath := options.OutputFile
+	useOfflineMode := options.OfflineMode
 
 	// Check if input file exists
 	if _, err := os.Stat(inputFilePath); os.IsNotExist(err) {
@@ -255,36 +257,33 @@ func main() {
 	// Read the scraped data
 	inputData, err := os.ReadFile(inputFilePath)
 	if err != nil {
-		log.Fatalf("Error reading input file: %v", err)
+		return fmt.Errorf("error reading input file: %v", err)
 	}
 
 	var inputReviews []InputReview
 	if err := json.Unmarshal(inputData, &inputReviews); err != nil {
-		log.Fatalf("Error parsing input JSON: %v", err)
+		return fmt.Errorf("error parsing input JSON: %v", err)
 	}
 
 	log.Printf("Processing %d reviews...", len(inputReviews))
 
-	// Check if we're using offline mode
-	useOfflineMode := *offlinePtr
-
 	// If not explicitly offline, check for API keys in order of preference
 	if !useOfflineMode {
 		// First, check for Azure OpenAI credentials
-		azureApiKey := os.Getenv("AZURE_OPENAI_API_KEY")
+		azureAPIKey := os.Getenv("AZURE_OPENAI_API_KEY")
 		azureEndpoint := os.Getenv("AZURE_OPENAI_ENDPOINT")
 		azureDeployment := os.Getenv("AZURE_OPENAI_DEPLOYMENT")
 
 		// If not found, check for standard OpenAI API key
-		openaiApiKey := os.Getenv("OPENAI_API_KEY")
+		openaiAPIKey := os.Getenv("OPENAI_API_KEY")
 
-		if azureApiKey != "" && azureEndpoint != "" {
+		if azureAPIKey != "" && azureEndpoint != "" {
 			if azureDeployment == "" {
 				azureDeployment = "gpt-4.1-mini" // Set default if not specified
 				log.Println("AZURE_OPENAI_DEPLOYMENT not set, using default: gpt-4.1-mini")
 			}
 			log.Printf("Using Azure OpenAI API for analysis with deployment %s", azureDeployment)
-		} else if openaiApiKey != "" {
+		} else if openaiAPIKey != "" {
 			log.Println("Using OpenAI API for analysis.")
 		} else {
 			log.Println("No API keys found. Using offline analysis mode.")
@@ -303,7 +302,7 @@ func main() {
 
 		if !useOfflineMode {
 			// First try Azure OpenAI if credentials are available
-			azureApiKey := os.Getenv("AZURE_OPENAI_API_KEY")
+			azureAPIKey := os.Getenv("AZURE_OPENAI_API_KEY")
 			azureEndpoint := os.Getenv("AZURE_OPENAI_ENDPOINT")
 			azureDeployment := os.Getenv("AZURE_OPENAI_DEPLOYMENT")
 
@@ -311,24 +310,24 @@ func main() {
 				azureDeployment = "gpt-4.1-mini" // Use default if not set
 			}
 
-			if azureApiKey != "" && azureEndpoint != "" {
+			if azureAPIKey != "" && azureEndpoint != "" {
 				// Try to analyze with Azure OpenAI
-				analysisResult, err = analyzeWithAzureOpenAI(azureApiKey, azureEndpoint, azureDeployment, inputReview)
+				analysisResult, err = analyzeWithAzureOpenAI(azureAPIKey, azureEndpoint, azureDeployment, inputReview)
 				if err != nil {
 					log.Printf("Error analyzing review %d with Azure OpenAI: %v", inputReview.ID, err)
 
 					// Fall back to standard OpenAI if available
-					openaiApiKey := os.Getenv("OPENAI_API_KEY")
-					if openaiApiKey != "" {
+					openaiAPIKey := os.Getenv("OPENAI_API_KEY")
+					if openaiAPIKey != "" {
 						log.Println("Falling back to standard OpenAI API")
-						analysisResult, err = analyzeWithOpenAI(openaiApiKey, inputReview)
+						analysisResult, err = analyzeWithOpenAI(openaiAPIKey, inputReview)
 					}
 				}
 			} else {
 				// Try standard OpenAI
-				openaiApiKey := os.Getenv("OPENAI_API_KEY")
-				if openaiApiKey != "" {
-					analysisResult, err = analyzeWithOpenAI(openaiApiKey, inputReview)
+				openaiAPIKey := os.Getenv("OPENAI_API_KEY")
+				if openaiAPIKey != "" {
+					analysisResult, err = analyzeWithOpenAI(openaiAPIKey, inputReview)
 				}
 			}
 
@@ -376,14 +375,15 @@ func main() {
 	// Write enriched reviews to output file
 	outputData, err := json.MarshalIndent(enrichedReviews, "", "  ")
 	if err != nil {
-		log.Fatalf("Error creating output JSON: %v", err)
+		return fmt.Errorf("error creating output JSON: %v", err)
 	}
 
 	if err := os.WriteFile(outputFilePath, outputData, 0644); err != nil {
-		log.Fatalf("Error writing output file: %v", err)
+		return fmt.Errorf("error writing output file: %v", err)
 	}
 
 	log.Printf("Enriched reviews saved to %s", outputFilePath)
+	return nil
 }
 
 // analyzeWithOpenAI uses the OpenAI API to analyze a review
@@ -596,7 +596,7 @@ Respond with a JSON object containing ONLY these four fields:
 
 	// Check if the response status is not OK
 	if resp.StatusCode != http.StatusOK {
-		return AIAnalysisResult{}, fmt.Errorf("Azure OpenAI API error: %s", string(respBody))
+		return AIAnalysisResult{}, fmt.Errorf("azure openai api error: %s", string(respBody))
 	}
 
 	// Parse the response (same structure as OpenAI response)
@@ -763,6 +763,11 @@ func determineDepartment(review InputReview) string {
 		return "Support" // Low ratings often need customer support intervention
 	}
 
+	// Use the departmentMappings for consistency in return values
+	if mappedDept, ok := departmentMappings[maxDept]; ok {
+		return mappedDept
+	}
+
 	return "General"
 }
 
@@ -798,23 +803,29 @@ func determineProduct(review InputReview) string {
 				}
 			}
 
-			// Assign counts to proper product names
-			switch product {
-			case "bloxone":
-				productMatches["BloxOne Platform"] += count
-			case "nios":
-				productMatches["NIOS"] += count
-			case "threat_defense":
-				productMatches["BloxOne Threat Defense"] += count
-			case "dns":
-				productMatches["BloxOne DNS"] += count
-				productMatches["BloxOne DDI"] += count / 2 // Partial match for DDI
-			case "dhcp":
-				productMatches["BloxOne DHCP"] += count
-				productMatches["BloxOne DDI"] += count / 2 // Partial match for DDI
-			case "ipam":
-				productMatches["BloxOne IPAM"] += count
-				productMatches["BloxOne DDI"] += count / 2 // Partial match for DDI
+			// Assign counts to proper product names using the productNameMappings
+			productName := productNameMappings[product]
+			if productName != "" {
+				productMatches[productName] += count
+			} else {
+				// Handle specific product mappings directly
+				switch product {
+				case "bloxone":
+					productMatches["BloxOne Platform"] += count
+				case "nios":
+					productMatches["NIOS"] += count
+				case "threat_defense":
+					productMatches["BloxOne Threat Defense"] += count
+				case "dns":
+					productMatches["BloxOne DNS"] += count
+					productMatches["BloxOne DDI"] += count / 2 // Partial match for DDI
+				case "dhcp":
+					productMatches["BloxOne DHCP"] += count
+					productMatches["BloxOne DDI"] += count / 2 // Partial match for DDI
+				case "ipam":
+					productMatches["BloxOne IPAM"] += count
+					productMatches["BloxOne DDI"] += count / 2 // Partial match for DDI
+				}
 			}
 		}
 	}

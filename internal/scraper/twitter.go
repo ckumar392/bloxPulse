@@ -14,8 +14,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Infoblox-CTO/review-scraper/internal/config"
-	"github.com/Infoblox-CTO/review-scraper/pkg/models"
+	"github.com/Infoblox-CTO/bloxPulse/internal/config"
+	"github.com/Infoblox-CTO/bloxPulse/pkg/models"
 	"github.com/google/uuid"
 )
 

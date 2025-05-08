@@ -55,7 +55,7 @@ The system follows a modular architecture with the following components:
 1. Clone the repository:
 
 ```
-git clone https://github.com/Infoblox-CTO/review-scraper.git
+git clone https://github.com/Infoblox-CTO/bloxPulse.git
 cd review-scraper
 ```
 

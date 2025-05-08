@@ -1,8 +1,8 @@
-package main
+package scraper
 
 import (
 	"encoding/json"
-	"flag"
+	// "flag"
 	"fmt"
 	"io"
 	"log"
@@ -252,30 +252,38 @@ func SaveReviewsToJSON(reviews []Review, filePath string) error {
 	return nil
 }
 
-func main() {
+// ScrapeOptions contains configuration options for the scraper
+type ScrapeOptions struct {
+	APIKey      string
+	ProductName string
+	MaxReviews  int
+	OutputFile  string
+	UseMock     bool
+}
+
+// Run performs the scraping operation with the given options
+func Run(options ScrapeOptions) error {
 	// Load environment variables from .env file
 	if err := godotenv.Load(); err != nil {
 		log.Println("Warning: Error loading .env file:", err)
 	}
 
-	// Parse command line flags
-	apiKey := flag.String("apikey", "", "RapidAPI key (required)")
-	productName := flag.String("product", "", "Product name (bloxone-ddi, infoblox-nios, or bloxone-threat-defense)")
-	maxReviews := flag.Int("max", 1000, "Maximum number of reviews to fetch")
-	outputFile := flag.String("output", "scraped_reviews.json", "Output JSON file name")
-	useMock := flag.Bool("mock", false, "Use mock data instead of API calls")
-	flag.Parse()
+	apiKey := options.APIKey
+	productName := options.ProductName
+	maxReviews := options.MaxReviews
+	outputFile := options.OutputFile
+	useMock := options.UseMock
 
 	// Validate API key if not using mock data
-	if *apiKey == "" && !*useMock {
-		// First check command line, then .env file, then regular environment variable
+	if apiKey == "" && !useMock {
+		// First check .env file, then regular environment variable
 		apiKeyEnv := os.Getenv("RAPID_API_KEY")
 		if apiKeyEnv == "" {
-			log.Println("Warning: No API key provided. Either provide an API key with -apikey flag, " +
-				"set the RAPID_API_KEY in the .env file, or use -mock flag for sample data.")
-			*useMock = true
+			log.Println("Warning: No API key provided. Either provide an API key, " +
+				"set the RAPID_API_KEY in the .env file, or use mock data.")
+			useMock = true
 		} else {
-			*apiKey = apiKeyEnv
+			apiKey = apiKeyEnv
 			log.Println("Using API key from environment variable")
 		}
 	}
@@ -289,36 +297,35 @@ func main() {
 
 	// If no product specified, scrape all valid products
 	products := []string{}
-	if *productName == "" {
+	if productName == "" {
 		fmt.Println("No product specified, processing all Infoblox products...")
 		for product := range validProducts {
 			products = append(products, product)
 		}
 	} else {
-		if !validProducts[*productName] {
-			fmt.Printf("Error: Invalid product name. Choose from: bloxone-ddi, infoblox-nios, bloxone-threat-defense\n")
-			os.Exit(1)
+		if !validProducts[productName] {
+			return fmt.Errorf("invalid product name. Choose from: bloxone-ddi, infoblox-nios, bloxone-threat-defense")
 		}
-		products = append(products, *productName)
+		products = append(products, productName)
 	}
 
 	// Create G2 client
-	client := NewG2Client(*apiKey)
+	client := NewG2Client(apiKey)
 
 	// Combined reviews from all products
 	var allReviews []Review
 
 	// Scrape or mock each product
 	for _, product := range products {
-		if *useMock {
+		if useMock {
 			mockReviews := createMockReviews(product)
 			allReviews = append(allReviews, mockReviews...)
 			continue
 		}
 
-		fmt.Printf("Fetching reviews for %s (max: %d)...\n", product, *maxReviews)
+		fmt.Printf("Fetching reviews for %s (max: %d)...\n", product, maxReviews)
 		maxRetries := 3
-		reviews, err := client.FetchReviews(product, *maxReviews, maxRetries)
+		reviews, err := client.FetchReviews(product, maxReviews, maxRetries)
 
 		if err != nil {
 			fmt.Printf("Error fetching reviews for %s: %v\n", product, err)
@@ -349,13 +356,13 @@ func main() {
 	fmt.Printf("Total reviews collected: %d\n", len(allReviews))
 
 	// Save all reviews to the output file
-	err := SaveReviewsToJSON(allReviews, *outputFile)
+	err := SaveReviewsToJSON(allReviews, outputFile)
 	if err != nil {
-		fmt.Printf("Error saving reviews: %v\n", err)
-		os.Exit(1)
+		return fmt.Errorf("error saving reviews: %v", err)
 	}
 
-	fmt.Printf("All reviews saved to %s\n", *outputFile)
+	fmt.Printf("All reviews saved to %s\n", outputFile)
+	return nil
 }
 
 // Helper function to check if a slice contains a string

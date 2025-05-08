@@ -1,4 +1,4 @@
-module github.com/Infoblox-CTO/review-scraper
+module github.com/Infoblox-CTO/bloxPulse
 
 go 1.23.0
 
