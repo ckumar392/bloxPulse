@@ -130,12 +130,12 @@ const StatsDashboard: React.FC<StatsDashboardProps> = ({ stats }) => {
   // Platform colors
   const platformColors: Record<Platform, string> = {
     'G2': '#FF492C',
-    'App Store': '#0D96F6',
-    'Google Play': '#01875F',
-    'Trustpilot': '#00B67A',
+    'Gartner': '#0D96F6',
+    'TrustRadius': '#00B67A',
+    'PeerSpot': '#01875F',
     'Reddit': '#FF4500',
-    'Twitter': '#1DA1F2',
-    'Other': colors.mediumGray
+    'Spiceworks Community': '#1DA1F2',
+    'LinkedIn / Medium / Blogs': colors.mediumGray
   };
   
   // Department colors
@@ -150,13 +150,14 @@ const StatsDashboard: React.FC<StatsDashboardProps> = ({ stats }) => {
   
   // Product colors
   const productColors: Record<Product, string> = {
-    'BloxOne': '#2C3E50',
+    'BloxOne DDI': '#27AE60', 
     'NIOS': '#D35400',
-    'DDI': '#27AE60',
-    'DNS Security': '#C0392B',
-    'Cloud': '#3498DB',
-    'Threat Defense': '#8E44AD',
-    'Other': colors.mediumGray
+    'BloxOne Threat Defense': '#8E44AD',
+    'BloxOne DNS': '#C0392B',
+    'BloxOne DHCP': '#2980B9',
+    'BloxOne IPAM': '#16A085',
+    'BloxOne Platform': '#2C3E50',
+    'BloxOne Cloud Network Automation': '#3498DB'
   };
 
   // Rating stars component

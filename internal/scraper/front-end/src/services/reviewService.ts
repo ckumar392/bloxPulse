@@ -43,11 +43,11 @@ const mockReviews: Review[] = [
     content: 'The tool is good overall but has a steep learning curve. Documentation could be better.',
     rating: 3,
     date: '2025-04-18T09:45:00Z',
-    platform: 'Trustpilot',
+    platform: 'Gartner',
     sentiment: 'Neutral',
     department: 'Support',
     author: 'Jane Smith',
-    url: 'https://www.trustpilot.com/review/product/789012',
+    url: 'https://www.Gartner.com/review/product/789012',
     highlights: ['Powerful features', 'Complex interface', 'Learning curve'],
     tags: ['documentation', 'usability', 'features'],
     isProcessed: true
@@ -58,7 +58,7 @@ const mockReviews: Review[] = [
     content: 'The app keeps crashing and support has been unresponsive for days.',
     rating: 1,
     date: '2025-04-17T14:22:00Z',
-    platform: 'App Store',
+    platform: 'Spiceworks Community',
     sentiment: 'Negative',
     department: 'Engineering',
     author: 'Mike Johnson',
@@ -88,11 +88,11 @@ const mockReviews: Review[] = [
     content: 'Too expensive for what it offers. There are better alternatives at half the price.',
     rating: 2,
     date: '2025-04-14T10:05:00Z',
-    platform: 'Trustpilot',
+    platform: 'Gartner',
     sentiment: 'Negative',
     department: 'Sales',
     author: 'Robert Brown',
-    url: 'https://www.trustpilot.com/review/product/234567',
+    url: 'https://www.Gartner.com/review/product/234567',
     highlights: ['Overpriced', 'Better alternatives'],
     tags: ['pricing', 'value', 'competition'],
     isProcessed: true
@@ -118,7 +118,7 @@ const mockReviews: Review[] = [
     content: 'Some features are great, others feel half-baked. The analytics are impressive but exporting is limited.',
     rating: 3,
     date: '2025-04-08T09:30:00Z',
-    platform: 'Google Play',
+    platform: 'PeerSpot',
     sentiment: 'Neutral',
     department: 'Product',
     author: 'Emily Davis',
@@ -139,6 +139,7 @@ const actualReviews: Review[] = (enrichedReviewsData as EnrichedReview[]).map(re
   platform: review.platform as Platform,
   sentiment: review.sentiment as 'Positive' | 'Neutral' | 'Negative',
   department: review.department as Department,
+  product: review.product as Product, // Add the product field from the JSON data
   author: review.author === "NOT GIVEN" ? "Anonymous" : review.author,
   url: '', // No URL in the JSON data, set to empty string
   highlights: [], // No highlights in the JSON data, set to empty array
@@ -156,13 +157,13 @@ const calculateStats = (): ReviewStats => {
   const reviewsWithRating = actualReviews.filter(r => r.rating !== undefined).length;
   
   const byPlatform: Record<Platform, number> = {
+    'Gartner': 0,
     'G2': 0,
-    'App Store': 0,
-    'Google Play': 0,
-    'Trustpilot': 0,
+    'TrustRadius': 0,
+    'PeerSpot': 0,
     'Reddit': 0,
-    'Twitter': 0,
-    'Other': 0
+    'Spiceworks Community': 0,
+    'LinkedIn / Medium / Blogs': 0
   };
   
   const byDepartment: Record<Department, number> = {
@@ -175,13 +176,14 @@ const calculateStats = (): ReviewStats => {
   };
   
   const byProduct: Record<Product, number> = {
-    'BloxOne': 0,
-    'NIOS': 0, 
-    'DDI': 0,
-    'DNS Security': 0,
-    'Cloud': 0,
-    'Threat Defense': 0,
-    'Other': 0
+    'BloxOne DDI': 0,
+    'NIOS': 0,
+    'BloxOne Threat Defense': 0,
+    'BloxOne DNS': 0,
+    'BloxOne DHCP': 0, 
+    'BloxOne IPAM': 0,
+    'BloxOne Platform': 0,
+    'BloxOne Cloud Network Automation': 0
   };
   
   actualReviews.forEach(review => {
@@ -189,26 +191,39 @@ const calculateStats = (): ReviewStats => {
     byDepartment[review.department]++;
     
     // Determine product from review content or metadata
-    let product: Product = 'Other';
+    let product: Product = 'BloxOne Platform'; // Default product if nothing specific is detected
     const content = (review.content || '').toLowerCase();
     const title = (review.title || '').toLowerCase();
     const tags = review.tags?.map(tag => tag.toLowerCase()) || [];
     
     // Check if review mentions specific products
-    if (content.includes('bloxone') || title.includes('bloxone') || tags.includes('bloxone')) {
-      product = 'BloxOne';
-    } else if (content.includes('nios') || title.includes('nios') || tags.includes('nios')) {
+    if ((content.includes('bloxone') && content.includes('ddi')) || 
+        (title.includes('bloxone') && title.includes('ddi')) || 
+        tags.some(tag => tag.includes('ddi'))) {
+      product = 'BloxOne DDI';
+    } else if (content.includes('nios') || title.includes('nios') || 
+              tags.some(tag => tag.includes('nios'))) {
       product = 'NIOS';
-    } else if (content.includes('ddi') || title.includes('ddi') || tags.includes('ddi')) {
-      product = 'DDI';
-    } else if ((content.includes('dns') && content.includes('security')) || 
-              (title.includes('dns') && title.includes('security')) || 
-              tags.includes('dns security')) {
-      product = 'DNS Security';
-    } else if (content.includes('cloud') || title.includes('cloud') || tags.includes('cloud')) {
-      product = 'Cloud';
-    } else if (content.includes('threat') || title.includes('threat') || tags.includes('threat defense')) {
-      product = 'Threat Defense';
+    } else if ((content.includes('threat') && content.includes('defense')) || 
+              (title.includes('threat') && title.includes('defense')) || 
+              tags.some(tag => tag.includes('threat'))) {
+      product = 'BloxOne Threat Defense';
+    } else if (content.includes('dns') || title.includes('dns') || 
+              tags.some(tag => tag.includes('dns'))) {
+      product = 'BloxOne DNS';
+    } else if (content.includes('dhcp') || title.includes('dhcp') || 
+              tags.some(tag => tag.includes('dhcp'))) {
+      product = 'BloxOne DHCP';
+    } else if (content.includes('ipam') || title.includes('ipam') || 
+              tags.some(tag => tag.includes('ipam'))) {
+      product = 'BloxOne IPAM';
+    } else if ((content.includes('cloud') && content.includes('network')) || 
+              (title.includes('cloud') && title.includes('network')) || 
+              tags.some(tag => tag.includes('cloud-network'))) {
+      product = 'BloxOne Cloud Network Automation';
+    } else if (content.includes('bloxone') || title.includes('bloxone') || 
+              tags.some(tag => tag.includes('bloxone'))) {
+      product = 'BloxOne Platform';
     }
     
     // Use product from the review data if available, otherwise use our detected product
@@ -246,6 +261,7 @@ export const reviewService = {
     platform?: Platform,
     department?: Department,
     sentiment?: string,
+    product?: Product,
     searchTerm?: string
   }): Promise<Review[]> => {
     await delay(800); // Simulate API delay
@@ -256,6 +272,7 @@ export const reviewService = {
       if (filters.platform && review.platform !== filters.platform) return false;
       if (filters.department && review.department !== filters.department) return false;
       if (filters.sentiment && review.sentiment !== filters.sentiment) return false;
+      if (filters.product && review.product !== filters.product) return false;
       if (filters.searchTerm) {
         const term = filters.searchTerm.toLowerCase();
         return (

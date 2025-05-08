@@ -62,13 +62,15 @@ const DashboardPage: React.FC = () => {
   const [successMessage, setSuccessMessage] = useState<string>('');
 
   const platforms: Platform[] = [
+    'Gartner', 
     'G2', 
-    'App Store', 
-    'Google Play', 
-    'Trustpilot', 
+    'TrustRadius', 
+    'PeerSpot', 
     'Reddit', 
-    'Twitter'
+    'Spiceworks Community',
+    'LinkedIn / Medium / Blogs',
   ];
+
 
   // Function to fetch stats that can be reused
   const fetchStats = async () => {

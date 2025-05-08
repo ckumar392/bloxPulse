@@ -13,7 +13,7 @@ import { styled } from '@mui/material/styles';
 import ReviewCard from '../components/ReviewCard';
 import AnimatedCard from '../components/AnimatedCard';
 import AnimatedButton from '../components/AnimatedButton';
-import { Review, Platform, Department, Sentiment } from '../types/reviews';
+import { Review, Platform, Department, Sentiment, Product } from '../types/reviews';
 import { reviewService } from '../services/reviewService';
 import { colors } from '../theme/theme';
 
@@ -57,6 +57,27 @@ const FilterChip = styled(Chip)<{ isactive: string }>(({ isactive, theme }) => (
   }
 }));
 
+const PlaceholderMenuItem = styled(MenuItem)(({ theme }) => ({
+  fontSize: '1rem',
+  fontWeight: 400,
+  color: theme.palette.text.primary,
+  padding: theme.spacing(2, 3),
+  width: '100%',
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis'
+}));
+
+const StyledSelect = styled(Select<string>)(({ theme }) => ({
+  '& .MuiSelect-select': {
+    padding: theme.spacing(4, 2),
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    fontWeight: '100'
+  }
+}));
+
 const LoaderContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
@@ -77,12 +98,14 @@ const ReviewsPage: React.FC = () => {
   const [selectedPlatform, setSelectedPlatform] = useState<Platform | ''>('');
   const [selectedDepartment, setSelectedDepartment] = useState<Department | ''>('');
   const [selectedSentiment, setSelectedSentiment] = useState<string>('');
+  const [selectedProduct, setSelectedProduct] = useState<Product | ''>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [reviewsPerPage] = useState<number>(6);
 
-  const platforms: Platform[] = ['G2', 'App Store', 'Google Play', 'Trustpilot', 'Reddit', 'Twitter', 'Other'];
+  const platforms: Platform[] = ['Gartner', 'G2', 'TrustRadius', 'PeerSpot', 'Reddit', 'Spiceworks Community', 'LinkedIn / Medium / Blogs'];
   const departments: Department[] = ['Product', 'Support', 'Sales', 'Marketing', 'Engineering', 'General'];
   const sentiments: Sentiment[] = ['Positive', 'Neutral', 'Negative'];
+  const products: Product[] = ['BloxOne DDI', 'NIOS', 'BloxOne Threat Defense', 'BloxOne DNS', 'BloxOne DHCP', 'BloxOne IPAM', 'BloxOne Platform', 'BloxOne Cloud Network Automation'];
 
   // Fetch reviews on component load and when filters change
   useEffect(() => {
@@ -93,13 +116,15 @@ const ReviewsPage: React.FC = () => {
           platform?: Platform,
           department?: Department,
           sentiment?: string,
-          searchTerm?: string
+          searchTerm?: string,
+          product?: Product
         } = {};
 
         if (selectedPlatform) filters.platform = selectedPlatform;
         if (selectedDepartment) filters.department = selectedDepartment;
         if (selectedSentiment) filters.sentiment = selectedSentiment;
         if (searchTerm) filters.searchTerm = searchTerm;
+        if (selectedProduct) filters.product = selectedProduct;
 
         const data = await reviewService.getReviews(Object.keys(filters).length > 0 ? filters : undefined);
         setReviews(data);
@@ -111,7 +136,7 @@ const ReviewsPage: React.FC = () => {
     };
 
     fetchReviews();
-  }, [selectedPlatform, selectedDepartment, selectedSentiment, searchTerm]);
+  }, [selectedPlatform, selectedDepartment, selectedSentiment, searchTerm, selectedProduct]);
 
   // Handle filter changes
   const handlePlatformChange = (event: SelectChangeEvent<string>) => {
@@ -126,6 +151,11 @@ const ReviewsPage: React.FC = () => {
 
   const handleSentimentFilter = (sentiment: string) => {
     setSelectedSentiment(selectedSentiment === sentiment ? '' : sentiment);
+    setCurrentPage(1);
+  };
+
+  const handleProductChange = (event: SelectChangeEvent<string>) => {
+    setSelectedProduct(event.target.value as Product | '');
     setCurrentPage(1);
   };
 
@@ -154,6 +184,7 @@ const ReviewsPage: React.FC = () => {
     setSelectedPlatform('');
     setSelectedDepartment('');
     setSelectedSentiment('');
+    setSelectedProduct('');
     setSearchTerm('');
     setCurrentPage(1);
   };
@@ -212,38 +243,60 @@ const ReviewsPage: React.FC = () => {
             <Grid item xs={12} sm={6} md={4}>
               <FormControl fullWidth>
                 <InputLabel id="platform-label">Platform</InputLabel>
-                <Select
+                <StyledSelect
                   labelId="platform-label"
                   value={selectedPlatform}
                   label="Platform"
                   onChange={handlePlatformChange}
+                  displayEmpty
                 >
-                  <MenuItem value="">
-                    <em>All Platforms</em>
-                  </MenuItem>
+                  <PlaceholderMenuItem value="">
+                    All Platforms
+                  </PlaceholderMenuItem>
                   {platforms.map((platform) => (
                     <MenuItem key={platform} value={platform}>{platform}</MenuItem>
                   ))}
-                </Select>
+                </StyledSelect>
               </FormControl>
             </Grid>
             
             <Grid item xs={12} sm={6} md={4}>
               <FormControl fullWidth>
                 <InputLabel id="department-label">Department</InputLabel>
-                <Select
+                <StyledSelect
                   labelId="department-label"
                   value={selectedDepartment}
                   label="Department"
                   onChange={handleDepartmentChange}
+                  displayEmpty
                 >
-                  <MenuItem value="">
-                    <em>All Departments</em>
-                  </MenuItem>
+                  <PlaceholderMenuItem value="">
+                    All Departments
+                  </PlaceholderMenuItem>
                   {departments.map((department) => (
                     <MenuItem key={department} value={department}>{department}</MenuItem>
                   ))}
-                </Select>
+                </StyledSelect>
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12} sm={6} md={4}>
+              <FormControl fullWidth>
+                <InputLabel id="product-label">Product</InputLabel>
+                <StyledSelect
+                  labelId="product-label"
+                  value={selectedProduct}
+                  label="Product"
+                  onChange={handleProductChange}
+                  displayEmpty
+                >
+                  <PlaceholderMenuItem value="">
+                    All Products
+                  </PlaceholderMenuItem>
+                  {products.map((product) => (
+                    <MenuItem key={product} value={product}>{product}</MenuItem>
+                  ))}
+                </StyledSelect>
               </FormControl>
             </Grid>
           </Grid>

@@ -1,10 +1,10 @@
-export type Platform = 'G2' | 'App Store' | 'Google Play' | 'Trustpilot' | 'Reddit' | 'Twitter' | 'Other';
+export type Platform = 'Gartner' | 'G2' | 'TrustRadius' | 'PeerSpot' | 'Reddit' | 'Spiceworks Community' | 'LinkedIn / Medium / Blogs';
 
 export type Sentiment = 'Positive' | 'Neutral' | 'Negative';
 
 export type Department = 'Product' | 'Support' | 'Sales' | 'Marketing' | 'Engineering' | 'General';
 
-export type Product = 'BloxOne' | 'NIOS' | 'DDI' | 'DNS Security' | 'Cloud' | 'Threat Defense' | 'Other';
+export type Product = 'BloxOne DDI' | 'NIOS' | 'BloxOne Threat Defense' | 'BloxOne DNS' | 'BloxOne DHCP' | 'BloxOne IPAM' | 'BloxOne Platform' | 'BloxOne Cloud Network Automation';
 
 export interface Review {
   id: string;
