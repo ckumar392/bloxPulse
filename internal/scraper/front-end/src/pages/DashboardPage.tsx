@@ -70,20 +70,21 @@ const DashboardPage: React.FC = () => {
     'Twitter'
   ];
 
+  // Function to fetch stats that can be reused
+  const fetchStats = async () => {
+    setLoading(true);
+    try {
+      const data = await reviewService.getStats();
+      setStats(data);
+    } catch (error) {
+      console.error('Error fetching stats:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Fetch stats on component load
   useEffect(() => {
-    const fetchStats = async () => {
-      setLoading(true);
-      try {
-        const data = await reviewService.getStats();
-        setStats(data);
-      } catch (error) {
-        console.error('Error fetching stats:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchStats();
   }, []);
 
@@ -101,19 +102,53 @@ const DashboardPage: React.FC = () => {
     if (selectedPlatforms.length === 0) return;
     
     setScrapingInProgress(true);
-    setSuccessMessage('');
+    setSuccessMessage('Scraping started. Please wait...');
     
     try {
       const result = await reviewService.triggerScraping(selectedPlatforms);
-      setSuccessMessage(result.message);
-      setTimeout(() => {
-        setSelectedPlatforms([]);
-        setSuccessMessage('');
-      }, 5000);
+      
+      // If G2 is selected, set up a more aggressive polling mechanism
+      if (selectedPlatforms.includes('G2')) {
+        pollScrapingStatus();
+      }
+      
+      // Clear platform selection after starting
+      setSelectedPlatforms([]);
     } catch (error) {
       console.error('Error starting scraping job:', error);
-    } finally {
+      setSuccessMessage('Failed to start scraping job. Please try again.');
       setScrapingInProgress(false);
+    }
+  };
+  
+  // Poll for scraping status
+  const pollScrapingStatus = async () => {
+    try {
+      // Check status endpoint
+      const response = await fetch('http://localhost:3001/api/v1/scraping/status');
+      const statusData = await response.json();
+      
+      if (statusData.status === 'completed' && 
+          statusData.completedAt && 
+          new Date(statusData.completedAt).getTime() > Date.now() - 60000) {
+        // Scraping completed within the last minute - refresh data
+        await fetchStats();
+        
+        setSuccessMessage('New reviews have been scraped and processed successfully!');
+        setScrapingInProgress(false);
+        
+        // Clear the success message after 5 seconds
+        setTimeout(() => {
+          setSuccessMessage('');
+        }, 5000);
+      } else {
+        // Not completed yet, poll again in 2 seconds
+        setTimeout(pollScrapingStatus, 2000);
+      }
+    } catch (error) {
+      console.error('Error checking scraping status:', error);
+      // Even on error, keep trying for some time
+      setTimeout(pollScrapingStatus, 3000);
     }
   };
 

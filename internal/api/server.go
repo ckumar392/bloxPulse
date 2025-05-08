@@ -1,11 +1,13 @@
 package api
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
+	"os/exec"
 	"strconv"
 	"strings"
 	"sync"
@@ -105,6 +107,7 @@ func (s *Server) setupRouter() {
 		// Scraping endpoints
 		r.Route("/scraping", func(r chi.Router) {
 			r.Post("/run", s.handleRunScraping)
+			r.Post("/run/g2", s.handleRunG2Scraping) // New endpoint for G2-specific scraping
 			r.Get("/stats", s.handleGetScrapingStats)
 		})
 
@@ -464,4 +467,67 @@ func (s *Server) handleUpdateConfig(w http.ResponseWriter, r *http.Request) {
 func (s *Server) handleSwagger(w http.ResponseWriter, r *http.Request) {
 	// This would serve Swagger UI files in a real implementation
 	s.respondError(w, r, http.StatusNotImplemented, "Swagger UI not yet implemented")
+}
+
+// ScrapingRequest represents the payload for triggering scraping
+type ScrapingRequest struct {
+	Platforms []string `json:"platforms"`
+}
+
+// handleRunG2Scraping triggers a G2-specific scraping run by executing main.go
+func (s *Server) handleRunG2Scraping(w http.ResponseWriter, r *http.Request) {
+	// Parse the request body
+	var req ScrapingRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		s.respondError(w, r, http.StatusBadRequest, "Invalid request format")
+		return
+	}
+
+	// Check if G2 is in the platforms list
+	g2Selected := false
+	for _, platform := range req.Platforms {
+		if platform == "G2" {
+			g2Selected = true
+			break
+		}
+	}
+
+	if !g2Selected {
+		s.respondError(w, r, http.StatusBadRequest, "G2 platform must be selected")
+		return
+	}
+
+	// Execute the main.go program with G2-specific parameters in the background
+	go func() {
+		log.Println("Starting G2 scraper from API endpoint")
+		
+		// Define the command to run main.go with appropriate parameters
+		// Using the same default paths as in main.go
+		scrapedFile := "scraped_reviews.json"
+		enrichedFile := "./internal/scraper/front-end/src/assets/enriched_reviews.json"
+		
+		// Use exec.Command to run the main program
+		cmd := exec.Command("go", "run", "main.go", 
+			"-product", "bloxone-ddi,infoblox-nios,bloxone-threat-defense", 
+			"-scraped", scrapedFile,
+			"-enriched", enrichedFile)
+		
+		// Capture stdout and stderr
+		var stdout, stderr bytes.Buffer
+		cmd.Stdout = &stdout
+		cmd.Stderr = &stderr
+		
+		err := cmd.Run()
+		if err != nil {
+			log.Printf("Error running G2 scraper: %v\nStderr: %s", err, stderr.String())
+			return
+		}
+		
+		log.Printf("G2 scraper completed successfully. Output: %s", stdout.String())
+	}()
+
+	s.respond(w, r, http.StatusOK, models.APIResponse{
+		Success: true,
+		Message: "G2 scraping job started",
+	})
 }

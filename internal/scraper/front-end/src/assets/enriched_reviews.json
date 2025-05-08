@@ -1,111 +1,6 @@
 [
   {
     "id": 1,
-    "reviewID": 10169597,
-    "author": "Akshay B.",
-    "platform": "G2",
-    "title": "Tough Security Solution with Some Setup Challenges",
-    "Postcontent": "What do you like best about BloxOne Threat Defense?\n\"BloxOne Threat Defense is great for spotting and reacting to cyber threats instantly, so you stay protected without slowing things down.\nIt works well with your existing tools and uses the latest threat info to keep your network safe.\" It's easy to use.\nCustomer support is top-notch and I used to use frequently.\n\nWhat do you dislike about BloxOne Threat Defense?\nOne thing to watch out for with BloxOne Threat Defense is that it can be a bit complex to set up and might be more expensive than some other options. It might take a bit of work to get everything just right.\n\nWhat problems is BloxOne Threat Defense solving and how is that benefiting you?\nBloxOne Threat Defense keeps your network safe by catching cyber threats before they become serious issues. It works well with your current security setup, making it easier to protect your systems without a lot of extra effort.",
-    "replyContents": "",
-    "timestamp": "2024-09-03T00:00:00",
-    "tags": [
-      "bloxone-threat-defense",
-      "DNS Security Solutions",
-      "Software-Defined Perimeter (SDP)",
-      "Digital Forensics"
-    ],
-    "rating": 5,
-    "sentiment": "Positive",
-    "department": "Sales",
-    "product": "BloxOne Threat Defense",
-    "needsAction": false
-  },
-  {
-    "id": 2,
-    "reviewID": 8915153,
-    "author": "Som Dutt S.",
-    "platform": "G2",
-    "title": "BloxOne Threat Defense",
-    "Postcontent": "What do you like best about BloxOne Threat Defense?\nThis is an excellent tool for managing threat which may be external and internal with reporting feature. It is easy to implement and use and it has nice customer support. We use it daily  and very to integrate for API implementation.\n\nWhat do you dislike about BloxOne Threat Defense?\nThere is nothing which I disliked about this tool.\n\nWhat problems is BloxOne Threat Defense solving and how is that benefiting you?\nBloxOne Threat Defense helping to solve issues for client for managing various services. It is available on cloud which makes it easy to login from anywhere.",
-    "replyContents": "",
-    "timestamp": "2023-11-22T00:00:00",
-    "tags": [
-      "bloxone-threat-defense",
-      "DNS Security Solutions",
-      "Software-Defined Perimeter (SDP)",
-      "Digital Forensics"
-    ],
-    "rating": 5,
-    "sentiment": "Positive",
-    "department": "General",
-    "product": "BloxOne Threat Defense",
-    "needsAction": false
-  },
-  {
-    "id": 3,
-    "reviewID": 8914022,
-    "author": "Andrew S.",
-    "platform": "G2",
-    "title": "Great customer service!",
-    "Postcontent": "What do you like best about BloxOne Threat Defense?\nWe recently had some minor with BloxOne Threat Defense and needed some immediate assistant. When we contacted them, they were swift, friendly and answered our questions within minutes!\n\nWhat do you dislike about BloxOne Threat Defense?\nI have not yet had any ready complaints about BloxOne Threat Defense. They have helped keep ourselves secure and have provided assistance when we needed it.\n\nWhat problems is BloxOne Threat Defense solving and how is that benefiting you?\nUsing their unique analytics platform, they help monitor and stop communication between potential threats and provide overall DNS security.",
-    "replyContents": "",
-    "timestamp": "2023-11-22T00:00:00",
-    "tags": [
-      "bloxone-threat-defense",
-      "DNS Security Solutions",
-      "Software-Defined Perimeter (SDP)",
-      "Digital Forensics"
-    ],
-    "rating": 5,
-    "sentiment": "Positive",
-    "department": "Support",
-    "product": "BloxOne Threat Defense",
-    "needsAction": false
-  },
-  {
-    "id": 4,
-    "reviewID": 7659985,
-    "author": "NOT GIVEN",
-    "platform": "G2",
-    "title": "Best Defender - BloxOne Threat Defense",
-    "Postcontent": "What do you like best about BloxOne Threat Defense?\nBloxOne Threat Defense is the solution of Infoblox. I have integrated this solution into the cloud support portal and the grid. This solution provides DNS security that protects users, devices and any endpoints. Threat Defense is advanced analytics based on Machine learning,highly accurate and automated to detect and prevent a range of threats. I have implemented this solution mainly through a tool like a Dossier tool is the context information to show.\n\nWhat do you dislike about BloxOne Threat Defense?\nI have integrated this solution, and it has no dislikes on my side because if any threats to your organisation, they automate to detect and prevent a range of threats.\n\nWhat problems is BloxOne Threat Defense solving and how is that benefiting you?\nBloxOne  Threat Defense is the solution of Infoblox. I have implemented and configured this solution. This solution protects users and devices anywhere from cyber attacks. The analytics are based on machine learning and high automation to detect and prevent threats. The benefits of this solution are any attacks in your organisation you remediate faster and are managed securely.",
-    "replyContents": "",
-    "timestamp": "2023-01-31T00:00:00",
-    "tags": [
-      "bloxone-threat-defense",
-      "DNS Security Solutions",
-      "Software-Defined Perimeter (SDP)",
-      "Digital Forensics"
-    ],
-    "rating": 4,
-    "sentiment": "Positive",
-    "department": "General",
-    "product": "BloxOne Threat Defense",
-    "needsAction": false
-  },
-  {
-    "id": 5,
-    "reviewID": 6534056,
-    "author": "Sanchit M.",
-    "platform": "G2",
-    "title": "Best Cloud based DNS firewall",
-    "Postcontent": "What do you like best about BloxOne Threat Defense?\nVisibility , control \u0026 automation to secure the hybrid workplace\n\nWhat do you dislike about BloxOne Threat Defense?\nIncompatible of using it with other DDI VENDOR\n\nWhat problems is BloxOne Threat Defense solving and how is that benefiting you?\nImprove security, effectiveness and resiliency and elevated secops efficiency",
-    "replyContents": "",
-    "timestamp": "2022-04-22T00:00:00",
-    "tags": [
-      "bloxone-threat-defense",
-      "DNS Security Solutions",
-      "Software-Defined Perimeter (SDP)",
-      "Digital Forensics"
-    ],
-    "rating": 4,
-    "sentiment": "Positive",
-    "department": "Product",
-    "product": "BloxOne Threat Defense",
-    "needsAction": false
-  },
-  {
-    "id": 1,
     "reviewID": 8253111,
     "author": "Zafer G.",
     "platform": "G2",
@@ -239,7 +134,7 @@
     "rating": 5,
     "sentiment": "Positive",
     "department": "General",
-    "product": "BloxOne Platform",
+    "product": "BloxOne DDI",
     "needsAction": false
   },
   {
@@ -484,7 +379,7 @@
     ],
     "rating": 5,
     "sentiment": "Positive",
-    "department": "Support",
+    "department": "Product",
     "product": "NIOS",
     "needsAction": true
   },
@@ -552,6 +447,111 @@
     "sentiment": "Positive",
     "department": "Engineering",
     "product": "NIOS",
+    "needsAction": false
+  },
+  {
+    "id": 1,
+    "reviewID": 10169597,
+    "author": "Akshay B.",
+    "platform": "G2",
+    "title": "Tough Security Solution with Some Setup Challenges",
+    "Postcontent": "What do you like best about BloxOne Threat Defense?\n\"BloxOne Threat Defense is great for spotting and reacting to cyber threats instantly, so you stay protected without slowing things down.\nIt works well with your existing tools and uses the latest threat info to keep your network safe.\" It's easy to use.\nCustomer support is top-notch and I used to use frequently.\n\nWhat do you dislike about BloxOne Threat Defense?\nOne thing to watch out for with BloxOne Threat Defense is that it can be a bit complex to set up and might be more expensive than some other options. It might take a bit of work to get everything just right.\n\nWhat problems is BloxOne Threat Defense solving and how is that benefiting you?\nBloxOne Threat Defense keeps your network safe by catching cyber threats before they become serious issues. It works well with your current security setup, making it easier to protect your systems without a lot of extra effort.",
+    "replyContents": "",
+    "timestamp": "2024-09-03T00:00:00",
+    "tags": [
+      "bloxone-threat-defense",
+      "DNS Security Solutions",
+      "Software-Defined Perimeter (SDP)",
+      "Digital Forensics"
+    ],
+    "rating": 5,
+    "sentiment": "Positive",
+    "department": "Sales",
+    "product": "BloxOne Threat Defense",
+    "needsAction": false
+  },
+  {
+    "id": 2,
+    "reviewID": 8915153,
+    "author": "Som Dutt S.",
+    "platform": "G2",
+    "title": "BloxOne Threat Defense",
+    "Postcontent": "What do you like best about BloxOne Threat Defense?\nThis is an excellent tool for managing threat which may be external and internal with reporting feature. It is easy to implement and use and it has nice customer support. We use it daily  and very to integrate for API implementation.\n\nWhat do you dislike about BloxOne Threat Defense?\nThere is nothing which I disliked about this tool.\n\nWhat problems is BloxOne Threat Defense solving and how is that benefiting you?\nBloxOne Threat Defense helping to solve issues for client for managing various services. It is available on cloud which makes it easy to login from anywhere.",
+    "replyContents": "",
+    "timestamp": "2023-11-22T00:00:00",
+    "tags": [
+      "bloxone-threat-defense",
+      "DNS Security Solutions",
+      "Software-Defined Perimeter (SDP)",
+      "Digital Forensics"
+    ],
+    "rating": 5,
+    "sentiment": "Positive",
+    "department": "General",
+    "product": "BloxOne Threat Defense",
+    "needsAction": false
+  },
+  {
+    "id": 3,
+    "reviewID": 8914022,
+    "author": "Andrew S.",
+    "platform": "G2",
+    "title": "Great customer service!",
+    "Postcontent": "What do you like best about BloxOne Threat Defense?\nWe recently had some minor with BloxOne Threat Defense and needed some immediate assistant. When we contacted them, they were swift, friendly and answered our questions within minutes!\n\nWhat do you dislike about BloxOne Threat Defense?\nI have not yet had any ready complaints about BloxOne Threat Defense. They have helped keep ourselves secure and have provided assistance when we needed it.\n\nWhat problems is BloxOne Threat Defense solving and how is that benefiting you?\nUsing their unique analytics platform, they help monitor and stop communication between potential threats and provide overall DNS security.",
+    "replyContents": "",
+    "timestamp": "2023-11-22T00:00:00",
+    "tags": [
+      "bloxone-threat-defense",
+      "DNS Security Solutions",
+      "Software-Defined Perimeter (SDP)",
+      "Digital Forensics"
+    ],
+    "rating": 5,
+    "sentiment": "Positive",
+    "department": "Support",
+    "product": "BloxOne Threat Defense",
+    "needsAction": false
+  },
+  {
+    "id": 4,
+    "reviewID": 7659985,
+    "author": "NOT GIVEN",
+    "platform": "G2",
+    "title": "Best Defender - BloxOne Threat Defense",
+    "Postcontent": "What do you like best about BloxOne Threat Defense?\nBloxOne Threat Defense is the solution of Infoblox. I have integrated this solution into the cloud support portal and the grid. This solution provides DNS security that protects users, devices and any endpoints. Threat Defense is advanced analytics based on Machine learning,highly accurate and automated to detect and prevent a range of threats. I have implemented this solution mainly through a tool like a Dossier tool is the context information to show.\n\nWhat do you dislike about BloxOne Threat Defense?\nI have integrated this solution, and it has no dislikes on my side because if any threats to your organisation, they automate to detect and prevent a range of threats.\n\nWhat problems is BloxOne Threat Defense solving and how is that benefiting you?\nBloxOne  Threat Defense is the solution of Infoblox. I have implemented and configured this solution. This solution protects users and devices anywhere from cyber attacks. The analytics are based on machine learning and high automation to detect and prevent threats. The benefits of this solution are any attacks in your organisation you remediate faster and are managed securely.",
+    "replyContents": "",
+    "timestamp": "2023-01-31T00:00:00",
+    "tags": [
+      "bloxone-threat-defense",
+      "DNS Security Solutions",
+      "Software-Defined Perimeter (SDP)",
+      "Digital Forensics"
+    ],
+    "rating": 4,
+    "sentiment": "Positive",
+    "department": "General",
+    "product": "BloxOne Threat Defense",
+    "needsAction": false
+  },
+  {
+    "id": 5,
+    "reviewID": 6534056,
+    "author": "Sanchit M.",
+    "platform": "G2",
+    "title": "Best Cloud based DNS firewall",
+    "Postcontent": "What do you like best about BloxOne Threat Defense?\nVisibility , control \u0026 automation to secure the hybrid workplace\n\nWhat do you dislike about BloxOne Threat Defense?\nIncompatible of using it with other DDI VENDOR\n\nWhat problems is BloxOne Threat Defense solving and how is that benefiting you?\nImprove security, effectiveness and resiliency and elevated secops efficiency",
+    "replyContents": "",
+    "timestamp": "2022-04-22T00:00:00",
+    "tags": [
+      "bloxone-threat-defense",
+      "DNS Security Solutions",
+      "Software-Defined Perimeter (SDP)",
+      "Digital Forensics"
+    ],
+    "rating": 4,
+    "sentiment": "Positive",
+    "department": "Product",
+    "product": "BloxOne Threat Defense",
     "needsAction": false
   }
 ]

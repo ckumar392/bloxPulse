@@ -202,8 +202,8 @@ const calculateStats = (): ReviewStats => {
     } else if (content.includes('ddi') || title.includes('ddi') || tags.includes('ddi')) {
       product = 'DDI';
     } else if ((content.includes('dns') && content.includes('security')) || 
-               (title.includes('dns') && title.includes('security')) || 
-               tags.includes('dns security')) {
+              (title.includes('dns') && title.includes('security')) || 
+              tags.includes('dns security')) {
       product = 'DNS Security';
     } else if (content.includes('cloud') || title.includes('cloud') || tags.includes('cloud')) {
       product = 'Cloud';
@@ -236,6 +236,9 @@ const mockStats: ReviewStats = calculateStats();
 
 // Simulate API delay
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+// Base API URL
+const API_BASE_URL = 'http://localhost:3001/api/v1';
 
 export const reviewService = {
   // Get all reviews with optional filtering
@@ -292,11 +295,45 @@ export const reviewService = {
   
   // Trigger a new scraping job
   triggerScraping: async (platforms: Platform[]): Promise<{ jobId: string, message: string }> => {
-    await delay(1500); // Simulate API delay
-    return {
-      jobId: uuidv4(),
-      message: `Scraping job started for platforms: ${platforms.join(', ')}`
-    };
+    try {
+      // Check if G2 is selected
+      const hasG2 = platforms.includes('G2');
+      
+      if (hasG2) {
+        // Make an API call to our local Express server
+        const response = await fetch(`${API_BASE_URL}/scraping/run/g2`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ platforms }),
+        });
+        
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        return {
+          jobId: data.jobId || uuidv4(),
+          message: `Scraping job started. Once complete, please refresh the page to see updated data.`
+        };
+      } else {
+        // For non-G2 platforms
+        await delay(1500); // Simulate API delay
+        return {
+          jobId: uuidv4(),
+          message: `Scraping job for platforms: ${platforms.join(', ')} is not fully implemented yet.`
+        };
+      }
+    } catch (error) {
+      console.error('Error triggering scraping:', error);
+      return {
+        jobId: uuidv4(),
+        message: 'Error starting scraping job. Please try again later.'
+      };
+    }
   }
 };
 
