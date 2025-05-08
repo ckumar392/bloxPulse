@@ -13,12 +13,13 @@ import CommentIcon from '@mui/icons-material/Comment';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
+import InfoIcon from '@mui/icons-material/Info';
 import { colors } from '../theme/theme';
 import ParticleBackground from './ParticleBackground';
 
 // Constants
-const DRAWER_WIDTH = 280;
-const CLOSED_DRAWER_WIDTH = 80;
+const DRAWER_WIDTH = 260;
+const CLOSED_DRAWER_WIDTH = 70;
 
 // Styled components
 const StyledDrawer = styled(Drawer)(({ theme }) => ({
@@ -27,10 +28,10 @@ const StyledDrawer = styled(Drawer)(({ theme }) => ({
   '& .MuiDrawer-paper': {
     width: DRAWER_WIDTH,
     boxSizing: 'border-box',
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    backdropFilter: 'blur(10px)',
-    borderRight: '1px solid rgba(0, 0, 0, 0.05)',
-    boxShadow: '0 4px 30px rgba(0, 0, 0, 0.05)',
+    backgroundColor: colors.cardBg,
+    backdropFilter: 'blur(12px)',
+    borderRight: `1px solid ${colors.borderColor}`,
+    boxShadow: '0 4px 30px rgba(0, 0, 0, 0.03)',
     transition: theme.transitions.create(['width', 'transform'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
@@ -45,10 +46,10 @@ const MiniDrawer = styled(Drawer)(({ theme }) => ({
   '& .MuiDrawer-paper': {
     width: CLOSED_DRAWER_WIDTH,
     boxSizing: 'border-box',
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    backdropFilter: 'blur(10px)',
-    borderRight: '1px solid rgba(0, 0, 0, 0.05)',
-    boxShadow: '0 4px 30px rgba(0, 0, 0, 0.05)',
+    backgroundColor: colors.cardBg,
+    backdropFilter: 'blur(12px)',
+    borderRight: `1px solid ${colors.borderColor}`,
+    boxShadow: '0 4px 30px rgba(0, 0, 0, 0.03)',
     transition: theme.transitions.create(['width', 'transform'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
@@ -58,23 +59,24 @@ const MiniDrawer = styled(Drawer)(({ theme }) => ({
 }));
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
-  backgroundColor: 'rgba(255, 255, 255, 0.9)',
-  backdropFilter: 'blur(10px)',
-  boxShadow: '0 4px 30px rgba(0, 0, 0, 0.05)',
-  borderBottom: '1px solid rgba(0, 0, 0, 0.05)',
+  backgroundColor: colors.cardBg,
+  backdropFilter: 'blur(12px)',
+  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.03)',
+  borderBottom: `1px solid ${colors.borderColor}`,
   color: colors.darkGray,
 }));
 
 const Logo = styled('div')({
   fontWeight: 'bold',
-  fontSize: '1.5rem',
+  fontSize: '1.6rem',
   background: `linear-gradient(135deg, ${colors.primary} 0%, ${colors.accent2} 100%)`,
   WebkitBackgroundClip: 'text',
   WebkitTextFillColor: 'transparent',
   display: 'flex',
   alignItems: 'center',
+  letterSpacing: '-0.5px',
   '& img': {
-    height: '28px',
+    height: '30px',
     marginRight: '12px',
   },
 });
@@ -91,6 +93,8 @@ const MainContent = styled(Box)(({ theme }) => ({
 const NavItemText = styled(ListItemText)({
   '& .MuiTypography-root': {
     fontWeight: 500,
+    fontSize: '0.95rem',
+    letterSpacing: '0.2px',
   }
 });
 
@@ -99,10 +103,19 @@ const ColorBar = styled('div')<{ active: boolean }>(({ active }) => ({
   left: 0,
   top: 0,
   bottom: 0,
-  width: 4,
+  width: 3,
   background: active ? `linear-gradient(to bottom, ${colors.primary}, ${colors.accent2})` : 'transparent',
   borderRadius: '0 4px 4px 0',
   transition: 'all 0.3s ease',
+}));
+
+const UserAvatar = styled(Avatar)(({ theme }) => ({
+  width: 36,
+  height: 36,
+  backgroundColor: colors.primary,
+  fontWeight: 'bold',
+  fontSize: '0.9rem',
+  boxShadow: '0 2px 10px rgba(0, 114, 198, 0.2)',
 }));
 
 // Navigation items
@@ -145,7 +158,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   const drawer = (
     <>
-      <Toolbar sx={{ display: 'flex', justifyContent: open ? 'space-between' : 'center', px: 2 }}>
+      <Toolbar sx={{ 
+        display: 'flex', 
+        justifyContent: open ? 'space-between' : 'center', 
+        px: 2,
+        height: '70px'
+      }}>
         <AnimatePresence>
           {open && (
             <motion.div
@@ -155,83 +173,102 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               transition={{ duration: 0.2 }}
             >
               <Logo>
-                <span>Review Scraper</span>
+                <span>BloxPulse</span>
               </Logo>
             </motion.div>
           )}
         </AnimatePresence>
         {!isMobile && (
-          <IconButton onClick={handleDrawerToggle} edge="end">
+          <IconButton onClick={handleDrawerToggle} edge="end" 
+            sx={{ 
+              color: colors.primary,
+              backgroundColor: 'rgba(0, 114, 198, 0.05)',
+              '&:hover': {
+                backgroundColor: 'rgba(0, 114, 198, 0.1)',
+              }
+            }}
+          >
             {open ? <MenuIcon /> : <MenuIcon />}
           </IconButton>
         )}
       </Toolbar>
-      <Divider />
-      <List sx={{ mt: 2 }}>
-        {navItems.map((item) => {
-          const active = isActive(item.path);
-          return (
-            <ListItem key={item.text} disablePadding sx={{ mb: 1 }}>
-              <ListItemButton
-                component={Link}
-                to={item.path}
-                sx={{
-                  px: open ? 3 : 'auto',
-                  py: 1.5,
-                  justifyContent: open ? 'flex-start' : 'center',
-                  position: 'relative',
-                  borderRadius: '0 12px 12px 0',
-                  mr: 2,
-                  bgcolor: active ? 'rgba(0, 114, 198, 0.04)' : 'transparent',
-                  '&:hover': {
-                    bgcolor: active ? 'rgba(0, 114, 198, 0.08)' : 'rgba(0, 0, 0, 0.04)'
-                  }
-                }}
-              >
-                <ColorBar active={active} />
-                <ListItemIcon
+      <Divider sx={{ opacity: 0.6 }} />
+      
+      <Box sx={{ mt: 1, px: 1 }}>
+        <List>
+          {navItems.map((item) => {
+            const active = isActive(item.path);
+            return (
+              <ListItem key={item.text} disablePadding sx={{ mb: 1 }}>
+                <ListItemButton
+                  component={Link}
+                  to={item.path}
                   sx={{
-                    color: active ? colors.primary : 'inherit',
-                    minWidth: open ? 40 : 'auto',
-                    mr: open ? 2 : 'auto',
-                    justifyContent: 'center',
+                    px: open ? 3 : 'auto',
+                    py: 1.2,
+                    justifyContent: open ? 'flex-start' : 'center',
+                    position: 'relative',
+                    borderRadius: '10px',
+                    backgroundColor: active ? 'rgba(0, 114, 198, 0.08)' : 'transparent',
+                    '&:hover': {
+                      backgroundColor: active ? 'rgba(0, 114, 198, 0.12)' : 'rgba(0, 0, 0, 0.04)'
+                    }
                   }}
                 >
-                  {item.icon}
-                </ListItemIcon>
-                {open && <NavItemText primary={item.text} />}
-                {active && open && (
-                  <motion.div
-                    layoutId="activeIndicator"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
+                  <ColorBar active={active} />
+                  <ListItemIcon
+                    sx={{
+                      color: active ? colors.primary : 'inherit',
+                      minWidth: open ? 40 : 'auto',
+                      mr: open ? 2 : 'auto',
+                      justifyContent: 'center',
+                      fontSize: '1.2rem',
+                    }}
                   >
-                    <Box
-                      sx={{
-                        position: 'absolute',
-                        right: 16,
-                        width: 8,
-                        height: 8,
-                        borderRadius: '50%',
-                        bgcolor: colors.primary
-                      }}
-                    />
-                  </motion.div>
-                )}
-              </ListItemButton>
-            </ListItem>
-          );
-        })}
-      </List>
+                    {item.icon}
+                  </ListItemIcon>
+                  {open && <NavItemText primary={item.text} />}
+                  {active && open && (
+                    <motion.div
+                      layoutId="activeIndicator"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                    >
+                      <Box
+                        sx={{
+                          position: 'absolute',
+                          right: 16,
+                          width: 6,
+                          height: 6,
+                          borderRadius: '50%',
+                          bgcolor: colors.primary
+                        }}
+                      />
+                    </motion.div>
+                  )}
+                </ListItemButton>
+              </ListItem>
+            );
+          })}
+        </List>
+      </Box>
+      
       <Box sx={{ flexGrow: 1 }} />
-      <List sx={{ mt: 'auto' }}>
+      
+      <Divider sx={{ opacity: 0.6, mb: 1 }} />
+      
+      <Box sx={{ px: 1, mb: 1 }}>
         <ListItem disablePadding>
           <ListItemButton
             sx={{
               px: open ? 3 : 'auto',
-              py: 1.5,
+              py: 1.2,
               justifyContent: open ? 'flex-start' : 'center',
+              borderRadius: '10px',
+              '&:hover': {
+                backgroundColor: 'rgba(0, 0, 0, 0.04)'
+              }
             }}
           >
             <ListItemIcon
@@ -241,12 +278,38 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 justifyContent: 'center',
               }}
             >
-              <LogoutIcon />
+              <InfoIcon sx={{ color: colors.mediumGray }} />
+            </ListItemIcon>
+            {open && <NavItemText primary="Help & Info" />}
+          </ListItemButton>
+        </ListItem>
+        
+        <ListItem disablePadding>
+          <ListItemButton
+            sx={{
+              px: open ? 3 : 'auto',
+              py: 1.2,
+              justifyContent: open ? 'flex-start' : 'center',
+              borderRadius: '10px',
+              '&:hover': {
+                backgroundColor: 'rgba(0, 0, 0, 0.04)'
+              }
+            }}
+          >
+            <ListItemIcon
+              sx={{
+                minWidth: open ? 40 : 'auto',
+                mr: open ? 2 : 'auto',
+                justifyContent: 'center',
+              }}
+            >
+              <LogoutIcon sx={{ color: colors.error }} />
             </ListItemIcon>
             {open && <NavItemText primary="Logout" />}
           </ListItemButton>
         </ListItem>
-      </List>
+      </Box>
+      
       <Box
         sx={{
           p: 2,
@@ -256,11 +319,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           visibility: open ? 'visible' : 'hidden'
         }}
       >
-        <Avatar sx={{ bgcolor: colors.primary }}>U</Avatar>
+        <UserAvatar>A</UserAvatar>
         {open && (
           <Box>
             <Typography variant="subtitle2" noWrap>
-              User Name
+              Admin User
             </Typography>
             <Typography variant="caption" noWrap color="text.secondary">
               Administrator
@@ -275,7 +338,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     <Box sx={{ display: 'flex' }}>
       <ParticleBackground />
       <StyledAppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
-        <Toolbar>
+        <Toolbar sx={{ height: '70px' }}>
           {isMobile && (
             <IconButton
               color="inherit"
@@ -289,12 +352,21 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           <Logo>
             {!open || isMobile ? (
               <>
-                <span>Review Scraper</span>
+                <span>BloxPulse</span>
               </>
             ) : (
               <span>&nbsp;</span>
             )}
           </Logo>
+          
+          <Box sx={{ flexGrow: 1 }} />
+          
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Typography variant="body2" sx={{ display: { xs: 'none', sm: 'block' } }}>
+              Infoblox Review Analysis
+            </Typography>
+            <UserAvatar sx={{ display: { xs: 'flex', md: 'none' } }}>A</UserAvatar>
+          </Box>
         </Toolbar>
       </StyledAppBar>
       
@@ -334,7 +406,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         }),
         pt: { xs: 8, sm: 10 }
       }}>
-        <Box component="main">
+        <Box component="main" sx={{ pt: 2 }}>
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

@@ -21,6 +21,7 @@ export interface Review {
   highlights?: string[];
   tags?: string[];
   isProcessed: boolean;
+  needsAction?: boolean; // Add flag to indicate if review needs action
 }
 
 export interface ReviewStats {
@@ -33,4 +34,5 @@ export interface ReviewStats {
   byDepartment: Record<Department, number>;
   byProduct: Record<Product, number>;  // Added product breakdown
   recentTrend: 'up' | 'down' | 'stable';
+  ratingsBreakdown?: Record<string, number>; // Add ratings breakdown by star rating
 }

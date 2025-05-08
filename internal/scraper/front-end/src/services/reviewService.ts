@@ -310,6 +310,42 @@ export const reviewService = {
     return mockStats;
   },
   
+  // Start scraping process for selected platforms
+  startScraping: async (platforms: Platform[]): Promise<{ success: boolean; message: string }> => {
+    try {
+      await delay(1000); // Simulate API delay
+      
+      // Call the existing triggerScraping method
+      const result = await reviewService.triggerScraping(platforms);
+      
+      return {
+        success: true,
+        message: result.message
+      };
+    } catch (error) {
+      console.error('Error starting scraping:', error);
+      return {
+        success: false,
+        message: 'Failed to start scraping. Please try again.'
+      };
+    }
+  },
+  
+  // Check the status of an ongoing scraping process
+  checkScrapingStatus: async (): Promise<{ completed: boolean; progress: number }> => {
+    await delay(800); // Simulate API delay
+    
+    // Randomly determine if the scraping is complete
+    // In a real implementation, this would check the actual job status
+    const isComplete = Math.random() > 0.7;
+    const progress = isComplete ? 100 : Math.floor(Math.random() * 90) + 10;
+    
+    return {
+      completed: isComplete,
+      progress: progress
+    };
+  },
+  
   // Trigger a new scraping job
   triggerScraping: async (platforms: Platform[]): Promise<{ jobId: string, message: string }> => {
     try {

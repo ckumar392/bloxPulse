@@ -3,21 +3,23 @@ import {
   Container, Typography, Box,  
   TextField, InputAdornment, MenuItem,
   Select, FormControl, InputLabel, SelectChangeEvent,
-  Chip, CircularProgress, Pagination
+  Chip, CircularProgress, Pagination, Card,
+  IconButton, Tooltip, Divider
 } from '@mui/material';
 import Grid from '../components/GridWrapper';
 import SearchIcon from '@mui/icons-material/Search';
 import FilterListIcon from '@mui/icons-material/FilterList';
+import ClearIcon from '@mui/icons-material/Clear';
+import RefreshIcon from '@mui/icons-material/Refresh';
 import { motion, AnimatePresence } from 'framer-motion';
 import { styled } from '@mui/material/styles';
 import ReviewCard from '../components/ReviewCard';
-import AnimatedCard from '../components/AnimatedCard';
 import AnimatedButton from '../components/AnimatedButton';
 import { Review, Platform, Department, Sentiment, Product } from '../types/reviews';
 import { reviewService } from '../services/reviewService';
 import { colors } from '../theme/theme';
 
-// Other styled components
+// Styled components
 const HeaderBox = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(4),
   display: 'flex',
@@ -25,7 +27,7 @@ const HeaderBox = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   [theme.breakpoints.down('sm')]: {
     flexDirection: 'column',
-    alignItems: 'stretch',
+    alignItems: 'flex-start',
     gap: theme.spacing(2),
   }
 }));
@@ -36,33 +38,34 @@ const GradientText = styled(Typography)(({ theme }) => ({
   backgroundClip: 'text',
   WebkitBackgroundClip: 'text',
   color: 'transparent',
+  marginBottom: theme.spacing(0.5),
 }));
 
-const FilterContainer = styled(Box)(({ theme }) => ({
+const FilterContainer = styled(Card)(({ theme }) => ({
   padding: theme.spacing(3),
   marginBottom: theme.spacing(4),
   borderRadius: '16px',
-  background: 'rgba(255, 255, 255, 0.8)',
-  backdropFilter: 'blur(10px)',
-  boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.05)',
+  background: colors.cardBg,
 }));
 
 const FilterChip = styled(Chip)<{ isactive: string }>(({ isactive, theme }) => ({
   margin: theme.spacing(0.5),
   backgroundColor: isactive === 'true' ? colors.primary : 'transparent',
   color: isactive === 'true' ? '#FFFFFF' : colors.darkGray,
-  borderColor: isactive === 'true' ? 'transparent' : colors.primary,
+  borderColor: isactive === 'true' ? 'transparent' : colors.borderColor,
+  borderRadius: '16px',
+  fontWeight: 500,
+  padding: '4px',
   '&:hover': {
     backgroundColor: isactive === 'true' ? colors.primary : 'rgba(0, 114, 198, 0.08)',
   }
 }));
 
 const PlaceholderMenuItem = styled(MenuItem)(({ theme }) => ({
-  fontSize: '1rem',
+  fontSize: '0.95rem',
   fontWeight: 400,
   color: theme.palette.text.primary,
-  padding: theme.spacing(2, 3),
-  width: '100%',
+  padding: theme.spacing(1.2, 2),
   whiteSpace: 'nowrap',
   overflow: 'hidden',
   textOverflow: 'ellipsis'
@@ -70,19 +73,32 @@ const PlaceholderMenuItem = styled(MenuItem)(({ theme }) => ({
 
 const StyledSelect = styled(Select<string>)(({ theme }) => ({
   '& .MuiSelect-select': {
-    padding: theme.spacing(4, 2),
+    padding: theme.spacing(1.5, 2),
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-    fontWeight: '100'
+    fontSize: '0.95rem',
+  }
+}));
+
+const StyledTextField = styled(TextField)(({ theme }) => ({
+  '& .MuiInputBase-root': {
+    padding: theme.spacing(0.8, 2),
+    boxShadow: 'none',
+  },
+  '& .MuiOutlinedInput-input': {
+    padding: theme.spacing(0.8, 0),
+    fontSize: '0.95rem',
   }
 }));
 
 const LoaderContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
+  flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
-  height: '400px'
+  padding: theme.spacing(10),
+  gap: theme.spacing(2)
 }));
 
 const PaginationContainer = styled(Box)(({ theme }) => ({
@@ -91,17 +107,26 @@ const PaginationContainer = styled(Box)(({ theme }) => ({
   padding: theme.spacing(4, 0),
 }));
 
+const AnimatedCard = styled(Card)(({ theme }) => ({
+  borderRadius: '16px',
+  background: colors.cardBg,
+  padding: theme.spacing(4),
+  transition: 'all 0.3s ease',
+  marginTop: theme.spacing(4)
+}));
+
 const ReviewsPage: React.FC = () => {
   const [reviews, setReviews] = useState<Review[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [loading, setLoading] = useState(true);
   const [selectedPlatform, setSelectedPlatform] = useState<Platform | ''>('');
   const [selectedDepartment, setSelectedDepartment] = useState<Department | ''>('');
   const [selectedSentiment, setSelectedSentiment] = useState<string>('');
   const [selectedProduct, setSelectedProduct] = useState<Product | ''>('');
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [reviewsPerPage] = useState<number>(6);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const reviewsPerPage = 10;
 
+  // Available filters
   const platforms: Platform[] = ['Gartner', 'G2', 'TrustRadius', 'PeerSpot', 'Reddit', 'Spiceworks Community', 'LinkedIn / Medium / Blogs'];
   const departments: Department[] = ['Product', 'Support', 'Sales', 'Marketing', 'Engineering', 'General'];
   const sentiments: Sentiment[] = ['Positive', 'Neutral', 'Negative'];

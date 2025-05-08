@@ -1,6 +1,4 @@
 import React, { useEffect, useRef } from 'react';
-// Box is imported but not used
-// import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { colors } from '../theme/theme';
 
@@ -11,7 +9,7 @@ const ParticleCanvas = styled('canvas')({
   width: '100%',
   height: '100%',
   zIndex: -1,
-  opacity: 0.4,
+  opacity: 0.3,
 });
 
 interface Particle {
@@ -21,6 +19,7 @@ interface Particle {
   speedX: number;
   speedY: number;
   color: string;
+  opacity: number;
 }
 
 const ParticleBackground: React.FC = () => {
@@ -44,17 +43,25 @@ const ParticleBackground: React.FC = () => {
 
     // Initialize particles
     const initParticles = () => {
-      const particleColors = [colors.primary, colors.accent1, colors.accent2];
+      const particleColors = [
+        colors.primary,
+        colors.accent1, 
+        colors.primaryLight,
+        colors.accent2
+      ];
+      
       const particles: Particle[] = [];
 
-      for (let i = 0; i < 50; i++) {
+      // Create fewer particles for a cleaner look
+      for (let i = 0; i < 40; i++) {
         particles.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          size: Math.random() * 3 + 1,
-          speedX: (Math.random() - 0.5) * 0.5,
-          speedY: (Math.random() - 0.5) * 0.5,
-          color: particleColors[Math.floor(Math.random() * particleColors.length)]
+          size: Math.random() * 2 + 0.5, // Smaller particles
+          speedX: (Math.random() - 0.5) * 0.3, // Slower movement
+          speedY: (Math.random() - 0.5) * 0.3,
+          color: particleColors[Math.floor(Math.random() * particleColors.length)],
+          opacity: Math.random() * 0.5 + 0.1 // Variable opacity
         });
       }
 
@@ -77,28 +84,32 @@ const ParticleBackground: React.FC = () => {
         if (particle.y < 0) particle.y = canvas.height;
         if (particle.y > canvas.height) particle.y = 0;
 
-        // Draw particle
+        // Draw particle with variable opacity
         ctx.beginPath();
         ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-        ctx.fillStyle = particle.color;
+        ctx.fillStyle = particle.color.replace(')', `, ${particle.opacity})`).replace('rgb', 'rgba');
         ctx.fill();
       });
 
-      // Draw connections between nearby particles
+      // Draw connections between nearby particles - but only closer ones for a cleaner look
       particlesRef.current.forEach((particleA, index) => {
         for (let i = index + 1; i < particlesRef.current.length; i++) {
           const particleB = particlesRef.current[i];
           const dx = particleA.x - particleB.x;
           const dy = particleA.y - particleB.y;
           const distance = Math.sqrt(dx * dx + dy * dy);
-
-          if (distance < 100) {
-            ctx.beginPath();
-            ctx.strokeStyle = `rgba(0, 114, 198, ${0.1 - distance / 1000})`;
-            ctx.lineWidth = 0.5;
-            ctx.moveTo(particleA.x, particleA.y);
-            ctx.lineTo(particleB.x, particleB.y);
-            ctx.stroke();
+          
+          // Only connect particles that are closer to each other
+          if (distance < 80) {
+            const opacity = 0.07 - distance / 1200; // Less visible connections
+            if (opacity > 0) {
+              ctx.beginPath();
+              ctx.strokeStyle = `rgba(0, 114, 198, ${opacity})`;
+              ctx.lineWidth = 0.3;
+              ctx.moveTo(particleA.x, particleA.y);
+              ctx.lineTo(particleB.x, particleB.y);
+              ctx.stroke();
+            }
           }
         }
       });

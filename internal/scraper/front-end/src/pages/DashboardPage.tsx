@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Container, Typography, Box,
-  Button, CircularProgress
+  Button, CircularProgress, Chip, Grid as MuiGrid,
+  Card, CardContent, Divider, Tooltip, IconButton
 } from '@mui/material';
 import { motion } from 'framer-motion';
 import { styled } from '@mui/material/styles';
@@ -10,12 +11,20 @@ import AnimatedButton from '../components/AnimatedButton';
 import { ReviewStats, Platform } from '../types/reviews';
 import { reviewService } from '../services/reviewService';
 import { colors } from '../theme/theme';
+import Grid from '../components/GridWrapper';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
 const HeaderBox = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(4),
   display: 'flex',
   justifyContent: 'space-between',
-  alignItems: 'center'
+  alignItems: 'center',
+  [theme.breakpoints.down('sm')]: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    gap: theme.spacing(2),
+  }
 }));
 
 const GradientText = styled(Typography)(({ theme }) => ({
@@ -24,73 +33,89 @@ const GradientText = styled(Typography)(({ theme }) => ({
   backgroundClip: 'text',
   WebkitBackgroundClip: 'text',
   color: 'transparent',
+  marginBottom: theme.spacing(0.5),
 }));
 
 const PlatformButton = styled(Button)<{ active: boolean }>(({ active, theme }) => ({
   margin: theme.spacing(0.5),
   borderRadius: '20px',
+  padding: '6px 16px',
   transition: 'all 0.3s ease',
   backgroundColor: active ? colors.primary : 'transparent',
   color: active ? '#FFFFFF' : colors.darkGray,
+  border: active ? 'none' : `1px solid ${colors.borderColor}`,
   '&:hover': {
-    backgroundColor: active ? colors.primary : 'rgba(0, 114, 198, 0.08)',
+    backgroundColor: active ? colors.primaryDark : 'rgba(0, 114, 198, 0.08)',
     transform: 'translateY(-2px)'
   }
 }));
 
-const GlassContainer = styled(Box)(({ theme }) => ({
+const GlassContainer = styled(Card)(({ theme }) => ({
   padding: theme.spacing(3),
   borderRadius: '16px',
-  background: 'rgba(255, 255, 255, 0.8)',
+  background: colors.cardBg,
   backdropFilter: 'blur(10px)',
+  borderColor: colors.borderColor,
+  marginBottom: theme.spacing(4),
   boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.05)',
-  marginBottom: theme.spacing(4)
+}));
+
+const ActionButton = styled(Button)(({ theme }) => ({
+  padding: '8px 24px',
+  borderRadius: '24px',
+  boxShadow: '0 4px 14px rgba(0, 114, 198, 0.2)',
+  '&:hover': {
+    boxShadow: '0 6px 20px rgba(0, 114, 198, 0.3)',
+  }
 }));
 
 const LoaderContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  height: '400px'
+  padding: theme.spacing(10),
+}));
+
+const DashboardContainer = styled(Container)(({ theme }) => ({
+  maxWidth: '1280px',
+  [theme.breakpoints.up('xl')]: {
+    maxWidth: '1400px',
+  },
 }));
 
 const DashboardPage: React.FC = () => {
-  const [stats, setStats] = useState<ReviewStats | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [scrapingInProgress, setScrapingInProgress] = useState<boolean>(false);
   const [selectedPlatforms, setSelectedPlatforms] = useState<Platform[]>([]);
-  const [successMessage, setSuccessMessage] = useState<string>('');
+  const [stats, setStats] = useState<ReviewStats | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [scrapingInProgress, setScrapingInProgress] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   const platforms: Platform[] = [
-    'Gartner', 
-    'G2', 
-    'TrustRadius', 
-    'PeerSpot', 
-    'Reddit', 
+    'Gartner',
+    'G2',
+    'TrustRadius',
+    'PeerSpot',
+    'Reddit',
     'Spiceworks Community',
     'LinkedIn / Medium / Blogs',
   ];
 
-
-  // Function to fetch stats that can be reused
-  const fetchStats = async () => {
-    setLoading(true);
-    try {
-      const data = await reviewService.getStats();
-      setStats(data);
-    } catch (error) {
-      console.error('Error fetching stats:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Fetch stats on component load
   useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        setLoading(true);
+        const fetchedStats = await reviewService.getStats();
+        setStats(fetchedStats);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching stats:', error);
+        setLoading(false);
+      }
+    };
+
     fetchStats();
   }, []);
 
-  // Toggle platform selection for scraping
   const togglePlatform = (platform: Platform) => {
     if (selectedPlatforms.includes(platform)) {
       setSelectedPlatforms(selectedPlatforms.filter(p => p !== platform));
@@ -99,50 +124,40 @@ const DashboardPage: React.FC = () => {
     }
   };
 
-  // Start scraping process
   const startScraping = async () => {
     if (selectedPlatforms.length === 0) return;
-    
+
     setScrapingInProgress(true);
-    setSuccessMessage('Scraping started. Please wait...');
+    setSuccessMessage('');
     
     try {
-      const result = await reviewService.triggerScraping(selectedPlatforms);
+      // Start the scraping process
+      const response = await reviewService.startScraping(selectedPlatforms);
       
-      // If G2 is selected, set up a more aggressive polling mechanism
-      if (selectedPlatforms.includes('G2')) {
-        pollScrapingStatus();
+      // If scraping started successfully, poll for status
+      if (response.success) {
+        await pollScrapingStatus();
+      } else {
+        console.error('Failed to start scraping:', response.message);
+        setScrapingInProgress(false);
       }
-      
-      // Clear platform selection after starting
-      setSelectedPlatforms([]);
     } catch (error) {
-      console.error('Error starting scraping job:', error);
-      setSuccessMessage('Failed to start scraping job. Please try again.');
+      console.error('Error starting scraping:', error);
       setScrapingInProgress(false);
     }
   };
-  
-  // Poll for scraping status
+
   const pollScrapingStatus = async () => {
     try {
-      // Check status endpoint
-      const response = await fetch('http://localhost:3001/api/v1/scraping/status');
-      const statusData = await response.json();
+      const statusResponse = await reviewService.checkScrapingStatus();
       
-      if (statusData.status === 'completed' && 
-          statusData.completedAt && 
-          new Date(statusData.completedAt).getTime() > Date.now() - 60000) {
-        // Scraping completed within the last minute - refresh data
-        await fetchStats();
-        
-        setSuccessMessage('New reviews have been scraped and processed successfully!');
+      if (statusResponse.completed) {
         setScrapingInProgress(false);
+        setSuccessMessage('Reviews have been successfully scraped and processed!');
         
-        // Clear the success message after 5 seconds
-        setTimeout(() => {
-          setSuccessMessage('');
-        }, 5000);
+        // Refresh stats after successful scraping
+        const refreshedStats = await reviewService.getStats();
+        setStats(refreshedStats);
       } else {
         // Not completed yet, poll again in 2 seconds
         setTimeout(pollScrapingStatus, 2000);
@@ -154,17 +169,51 @@ const DashboardPage: React.FC = () => {
     }
   };
 
+  const handleRefreshStats = async () => {
+    try {
+      setLoading(true);
+      const refreshedStats = await reviewService.getStats();
+      setStats(refreshedStats);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error refreshing stats:', error);
+      setLoading(false);
+    }
+  };
+
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
+    <DashboardContainer maxWidth={false} sx={{ py: 4 }}>
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
         <HeaderBox>
-          <GradientText variant="h3">
-            Dashboard
-          </GradientText>
+          <Box>
+            <GradientText variant="h3">
+              Dashboard
+            </GradientText>
+            <Typography variant="subtitle1" color="text.secondary">
+              Monitor and analyze product reviews across platforms
+            </Typography>
+          </Box>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Tooltip title="Refresh statistics">
+              <IconButton 
+                onClick={handleRefreshStats} 
+                sx={{ mr: 1 }}
+                disabled={loading}
+              >
+                <RefreshIcon />
+              </IconButton>
+            </Tooltip>
+            <AnimatedButton 
+              variant="contained"
+              color="primary"
+            >
+              Export Reports
+            </AnimatedButton>
+          </Box>
         </HeaderBox>
       </motion.div>
 
@@ -174,12 +223,26 @@ const DashboardPage: React.FC = () => {
         transition={{ delay: 0.1, duration: 0.5 }}
       >
         <GlassContainer>
-          <Typography variant="h6" gutterBottom>
-            Select Platforms to Scrape
-          </Typography>
-          <Box sx={{ my: 1 }}>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
-              {platforms.map((platform, index) => (
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 3 }}>
+            <Box>
+              <Typography variant="h5" fontWeight="500" gutterBottom>
+                Collect New Reviews
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Select platforms to scrape for new product reviews
+              </Typography>
+            </Box>
+            
+            <Tooltip title="Reviews are collected and analyzed automatically">
+              <HelpOutlineIcon fontSize="small" color="action" />
+            </Tooltip>
+          </Box>
+          
+          <Divider sx={{ mb: 3 }} />
+          
+          <Box sx={{ mb: 3 }}>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', mb: 3 }}>
+              {platforms.map((platform) => (
                 <motion.div
                   key={platform}
                   whileHover={{ scale: 1.05 }}
@@ -190,31 +253,32 @@ const DashboardPage: React.FC = () => {
                     active={selectedPlatforms.includes(platform)}
                     onClick={() => togglePlatform(platform)}
                     disabled={scrapingInProgress}
+                    size="medium"
                   >
                     {platform}
                   </PlatformButton>
                 </motion.div>
               ))}
-              
-              {/* Place the button directly after Twitter */}
+            </Box>
+            
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
               <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                style={{ marginLeft: '16px' }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
               >
-                <Button
+                <ActionButton
                   variant="contained"
-                  color="secondary"
+                  color="primary"
                   disabled={scrapingInProgress || selectedPlatforms.length === 0}
                   onClick={startScraping}
                   sx={{ 
                     borderRadius: '20px',
-                    height: '36px',
-                    backgroundImage: 'linear-gradient(90deg, #8DC63F 0%, #0072C6 100%)'
+                    background: 'linear-gradient(90deg, #8DC63F 0%, #0072C6 100%)'
                   }}
+                  startIcon={scrapingInProgress && <CircularProgress size={16} color="inherit" />}
                 >
                   {scrapingInProgress ? 'Processing...' : 'Scrape New Reviews'}
-                </Button>
+                </ActionButton>
               </motion.div>
             </Box>
           </Box>
@@ -224,6 +288,7 @@ const DashboardPage: React.FC = () => {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
             >
               <Box 
                 sx={{ 
@@ -231,9 +296,22 @@ const DashboardPage: React.FC = () => {
                   p: 2, 
                   bgcolor: 'rgba(141, 198, 63, 0.1)', 
                   borderRadius: 2,
-                  border: `1px solid ${colors.accent1}`
+                  border: `1px solid ${colors.accent1}`,
+                  display: 'flex',
+                  alignItems: 'center'
                 }}
               >
+                <Box 
+                  component="span"
+                  sx={{ 
+                    width: 8, 
+                    height: 8, 
+                    bgcolor: colors.accent1,
+                    borderRadius: '50%',
+                    display: 'inline-block',
+                    mr: 1.5
+                  }}
+                />
                 <Typography color={colors.accent1}>
                   {successMessage}
                 </Typography>
@@ -250,11 +328,16 @@ const DashboardPage: React.FC = () => {
       ) : stats ? (
         <StatsDashboard stats={stats} />
       ) : (
-        <Typography variant="h6" color="text.secondary" align="center" sx={{ py: 10 }}>
-          No stats available
-        </Typography>
+        <Box textAlign="center" sx={{ py: 10 }}>
+          <Typography variant="h6" color="text.secondary" gutterBottom>
+            No statistics available
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Start by collecting reviews from the platforms above
+          </Typography>
+        </Box>
       )}
-    </Container>
+    </DashboardContainer>
   );
 };
 
