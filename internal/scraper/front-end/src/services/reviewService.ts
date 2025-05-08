@@ -139,7 +139,7 @@ const actualReviews: Review[] = (enrichedReviewsData as EnrichedReview[]).map(re
   platform: review.platform as Platform,
   sentiment: review.sentiment as 'Positive' | 'Neutral' | 'Negative',
   department: review.department as Department,
-  author: review.author,
+  author: review.author === "NOT GIVEN" ? "Anonymous" : review.author,
   url: '', // No URL in the JSON data, set to empty string
   highlights: [], // No highlights in the JSON data, set to empty array
   tags: review.tags || [],
