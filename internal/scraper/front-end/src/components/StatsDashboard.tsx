@@ -3,7 +3,7 @@ import { Box, Typography, Chip } from '@mui/material';
 import Grid from './GridWrapper';
 import { styled } from '@mui/material/styles';
 import { motion } from 'framer-motion';
-import { ReviewStats, Platform, Department } from '../types/reviews';
+import { ReviewStats, Platform, Department, Product } from '../types/reviews';
 import AnimatedCard from './AnimatedCard';
 import { colors } from '../theme/theme';
 
@@ -118,9 +118,14 @@ const StatsDashboard: React.FC<StatsDashboardProps> = ({ stats }) => {
   const topDepartment = Object.entries(stats.byDepartment)
     .sort((a, b) => b[1] - a[1])[0];
     
+  // Get the product with the highest count
+  const topProduct = Object.entries(stats.byProduct)
+    .sort((a, b) => b[1] - a[1])[0];
+    
   // Max values for bar charts
   const maxPlatformCount = Math.max(...Object.values(stats.byPlatform));
   const maxDepartmentCount = Math.max(...Object.values(stats.byDepartment));
+  const maxProductCount = Math.max(...Object.values(stats.byProduct));
   
   // Platform colors
   const platformColors: Record<Platform, string> = {
@@ -143,6 +148,17 @@ const StatsDashboard: React.FC<StatsDashboardProps> = ({ stats }) => {
     'General': colors.mediumGray
   };
   
+  // Product colors
+  const productColors: Record<Product, string> = {
+    'BloxOne': '#2C3E50',
+    'NIOS': '#D35400',
+    'DDI': '#27AE60',
+    'DNS Security': '#C0392B',
+    'Cloud': '#3498DB',
+    'Threat Defense': '#8E44AD',
+    'Other': colors.mediumGray
+  };
+
   // Rating stars component
   const ratingStars = () => {
     const rating = stats.averageRating;
@@ -332,6 +348,41 @@ const StatsDashboard: React.FC<StatsDashboardProps> = ({ stats }) => {
                     value={count} 
                     max={maxDepartmentCount}
                     color={departmentColors[dept as Department] || colors.primary}
+                  />
+                </motion.div>
+              </Box>
+            ))}
+          </Box>
+        </StatsCard>
+      </Grid>
+      
+      {/* Product breakdown */}
+      <Grid item xs={12} md={6}>
+        <StatsCard>
+          <Typography variant="h5" gutterBottom>
+            Product Breakdown
+          </Typography>
+          
+          <Typography variant="subtitle2" sx={{ mb: 2 }}>
+            Top Product: <strong>{topProduct[0]}</strong> ({topProduct[1]} reviews)
+          </Typography>
+          
+          <Box>
+            {Object.entries(stats.byProduct).map(([product, count], index) => (
+              <Box key={product} sx={{ mb: 2 }}>
+                <BarLabel>
+                  <Typography variant="body2">{product}</Typography>
+                  <Typography variant="body2">{count}</Typography>
+                </BarLabel>
+                <motion.div
+                  initial={{ scaleX: 0, originX: 0 }}
+                  animate={{ scaleX: 1 }}
+                  transition={{ delay: 0.3 + index * 0.1, duration: 0.8 }}
+                >
+                  <BarChart 
+                    value={count} 
+                    max={maxProductCount}
+                    color={productColors[product as Product] || colors.primary}
                   />
                 </motion.div>
               </Box>

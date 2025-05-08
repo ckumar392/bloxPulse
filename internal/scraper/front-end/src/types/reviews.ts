@@ -4,6 +4,8 @@ export type Sentiment = 'Positive' | 'Neutral' | 'Negative';
 
 export type Department = 'Product' | 'Support' | 'Sales' | 'Marketing' | 'Engineering' | 'General';
 
+export type Product = 'BloxOne' | 'NIOS' | 'DDI' | 'DNS Security' | 'Cloud' | 'Threat Defense' | 'Other';
+
 export interface Review {
   id: string;
   title: string;
@@ -13,6 +15,7 @@ export interface Review {
   platform: Platform;
   sentiment: Sentiment;
   department: Department;
+  product?: Product;  // Added product field
   author?: string;
   url?: string;
   highlights?: string[];
@@ -28,5 +31,6 @@ export interface ReviewStats {
   averageRating: number;
   byPlatform: Record<Platform, number>;
   byDepartment: Record<Department, number>;
+  byProduct: Record<Product, number>;  // Added product breakdown
   recentTrend: 'up' | 'down' | 'stable';
 }

@@ -1,4 +1,4 @@
-import { Review, ReviewStats, Platform, Department } from '../types/reviews';
+import { Review, ReviewStats, Platform, Department, Product } from '../types/reviews';
 import { v4 as uuidv4 } from 'uuid';
 import enrichedReviewsData from '../assets/enriched_reviews.json';
 
@@ -174,9 +174,49 @@ const calculateStats = (): ReviewStats => {
     'General': 0
   };
   
+  const byProduct: Record<Product, number> = {
+    'BloxOne': 0,
+    'NIOS': 0, 
+    'DDI': 0,
+    'DNS Security': 0,
+    'Cloud': 0,
+    'Threat Defense': 0,
+    'Other': 0
+  };
+  
   actualReviews.forEach(review => {
     byPlatform[review.platform]++;
     byDepartment[review.department]++;
+    
+    // Determine product from review content or metadata
+    let product: Product = 'Other';
+    const content = (review.content || '').toLowerCase();
+    const title = (review.title || '').toLowerCase();
+    const tags = review.tags?.map(tag => tag.toLowerCase()) || [];
+    
+    // Check if review mentions specific products
+    if (content.includes('bloxone') || title.includes('bloxone') || tags.includes('bloxone')) {
+      product = 'BloxOne';
+    } else if (content.includes('nios') || title.includes('nios') || tags.includes('nios')) {
+      product = 'NIOS';
+    } else if (content.includes('ddi') || title.includes('ddi') || tags.includes('ddi')) {
+      product = 'DDI';
+    } else if ((content.includes('dns') && content.includes('security')) || 
+               (title.includes('dns') && title.includes('security')) || 
+               tags.includes('dns security')) {
+      product = 'DNS Security';
+    } else if (content.includes('cloud') || title.includes('cloud') || tags.includes('cloud')) {
+      product = 'Cloud';
+    } else if (content.includes('threat') || title.includes('threat') || tags.includes('threat defense')) {
+      product = 'Threat Defense';
+    }
+    
+    // Use product from the review data if available, otherwise use our detected product
+    if (review.product) {
+      product = review.product;
+    }
+    
+    byProduct[product]++;
   });
   
   return {
@@ -187,6 +227,7 @@ const calculateStats = (): ReviewStats => {
     averageRating: reviewsWithRating > 0 ? totalRating / reviewsWithRating : 0,
     byPlatform,
     byDepartment,
+    byProduct,
     recentTrend: positiveCount > negativeCount ? 'up' : negativeCount > positiveCount ? 'down' : 'stable'
   };
 };
