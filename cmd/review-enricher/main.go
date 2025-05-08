@@ -17,7 +17,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
-// InputReview represents the format of reviews in scraped_data.json
+// InputReview represents the format of reviews in scraped_reviews.json
 type InputReview struct {
 	ID            int      `json:"id"`
 	ReviewID      int      `json:"reviewID"`
@@ -232,11 +232,11 @@ func main() {
 
 	// Add command-line flag for offline mode
 	offlinePtr := flag.Bool("offline", false, "Use offline analysis mode instead of AI API")
-	inputFilePtr := flag.String("input", "scraped_data.json", "Path to input JSON file")
+	inputFilePtr := flag.String("input", "scraped_reviews.json", "Path to input JSON file")
 	outputFilePtr := flag.String("output", "enriched_reviews.json", "Path to output JSON file")
 	flag.Parse()
 
-	// Define file paths
+	// Define file path
 	inputFilePath := *inputFilePtr
 	outputFilePath := *outputFilePtr
 
