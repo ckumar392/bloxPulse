@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/joho/godotenv"
@@ -187,7 +188,7 @@ func (c *G2Client) FetchReviews(product string, maxReviews int, retryCount int) 
 			Author:        r.Reviewer.Name,
 			Platform:      "G2",
 			Title:         r.ReviewTitle,
-			PostContent:   r.ReviewContent,
+			PostContent:   formatReviewContent(r.ReviewContent),
 			ReplyContents: "", // Vendor replies are not separated in the API response
 			Timestamp:     r.PublishDate,
 			Tags:          tags,
@@ -373,4 +374,38 @@ func contains(slice []string, str string) bool {
 		}
 	}
 	return false
+}
+
+func formatReviewContent(content string) string {
+	// Remove questions and consolidate answers into a single paragraph
+
+	// Common question patterns to identify and remove - add more as needed
+	questionPatterns := []string{
+		"What do you like best about",
+		"What do you dislike about",
+		"What problems is",
+		"solving and how is that benefiting you",
+	}
+
+	// Work with each line
+	lines := strings.Split(content, "\n")
+	var resultLines []string
+
+	for _, line := range lines {
+		// Skip question lines
+		skipLine := false
+		for _, pattern := range questionPatterns {
+			if strings.Contains(line, pattern) {
+				skipLine = true
+				break
+			}
+		}
+
+		if !skipLine && strings.TrimSpace(line) != "" {
+			resultLines = append(resultLines, strings.TrimSpace(line))
+		}
+	}
+
+	// Join all content with spaces
+	return strings.Join(resultLines, " ")
 }
