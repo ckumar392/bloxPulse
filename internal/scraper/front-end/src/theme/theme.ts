@@ -2,7 +2,7 @@ import { createTheme } from '@mui/material/styles';
 
 // Enhanced color palette with professional tones
 const colors = {
-  primary: '#0072C6',
+  primary: '#2ECC71',
   primaryDark: '#005ea3',
   primaryLight: '#3399FF',
   white: '#FFFFFF',

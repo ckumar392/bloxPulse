@@ -398,9 +398,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       
       <MainContent sx={{ 
         flexGrow: 1, 
-        ml: { sm: `${open ? DRAWER_WIDTH : CLOSED_DRAWER_WIDTH}px` },
         width: { sm: `calc(100% - ${open ? DRAWER_WIDTH : CLOSED_DRAWER_WIDTH}px)` },
-        transition: theme.transitions.create(['margin', 'width'], {
+        transition: theme.transitions.create(['width'], {
           easing: theme.transitions.easing.easeOut,
           duration: theme.transitions.duration.enteringScreen,
         }),
