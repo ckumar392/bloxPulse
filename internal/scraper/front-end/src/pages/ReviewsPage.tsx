@@ -3,14 +3,11 @@ import {
   Container, Typography, Box,  
   TextField, InputAdornment, MenuItem,
   Select, FormControl, InputLabel, SelectChangeEvent,
-  Chip, CircularProgress, Pagination, Card,
-  IconButton, Tooltip, Divider
+  Chip, CircularProgress, Pagination, Card
 } from '@mui/material';
 import Grid from '../components/GridWrapper';
 import SearchIcon from '@mui/icons-material/Search';
 import FilterListIcon from '@mui/icons-material/FilterList';
-import ClearIcon from '@mui/icons-material/Clear';
-import RefreshIcon from '@mui/icons-material/Refresh';
 import { motion, AnimatePresence } from 'framer-motion';
 import { styled } from '@mui/material/styles';
 import ReviewCard from '../components/ReviewCard';
@@ -73,21 +70,10 @@ const PlaceholderMenuItem = styled(MenuItem)(({ theme }) => ({
 
 const StyledSelect = styled(Select<string>)(({ theme }) => ({
   '& .MuiSelect-select': {
-    padding: theme.spacing(1.5, 2),
+    padding: theme.spacing(4.0, 2),
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-    fontSize: '0.95rem',
-  }
-}));
-
-const StyledTextField = styled(TextField)(({ theme }) => ({
-  '& .MuiInputBase-root': {
-    padding: theme.spacing(0.8, 2),
-    boxShadow: 'none',
-  },
-  '& .MuiOutlinedInput-input': {
-    padding: theme.spacing(0.8, 0),
     fontSize: '0.95rem',
   }
 }));
