@@ -1,0 +1,95 @@
+[
+  {
+    "id": 1,
+    "reviewID": 101,
+    "author": "John Doe",
+    "platform": "G2",
+    "title": "Great experience with infoblox-nios",
+    "Postcontent": "What do you like best about BloxOne DDI?\nGreat DNS tool and all core network service are centrally managed\n\nWhat do you dislike about BloxOne DDI?\nThe license price is very high and the feeds are limited for threat Intel\n\nWhat problems is BloxOne DDI solving and how is that benefiting you?\nAssits us in protecting the DNS service",
+    "replyContents": "Thank you for your review! We're glad you're enjoying our product.",
+    "timestamp": "2025-05-09T13:12:33+05:30",
+    "tags": [
+      "Enterprise",
+      "Easy to use",
+      "infoblox-nios"
+    ],
+    "rating": 5
+  },
+  {
+    "id": 2,
+    "reviewID": 102,
+    "author": "Jane Smith",
+    "platform": "G2",
+    "title": "Mixed feelings about infoblox-nios",
+    "Postcontent": "The infoblox-nios product has good features but the UI needs improvement.",
+    "replyContents": "",
+    "timestamp": "2025-04-09T13:12:33+05:30",
+    "tags": [
+      "Mid-market",
+      "infoblox-nios"
+    ],
+    "rating": 3
+  },
+  {
+    "id": 1,
+    "reviewID": 101,
+    "author": "John Doe",
+    "platform": "G2",
+    "title": "Great experience with bloxone-threat-defense",
+    "Postcontent": "What do you like best about BloxOne DDI?\nGreat DNS tool and all core network service are centrally managed\n\nWhat do you dislike about BloxOne DDI?\nThe license price is very high and the feeds are limited for threat Intel\n\nWhat problems is BloxOne DDI solving and how is that benefiting you?\nAssits us in protecting the DNS service",
+    "replyContents": "Thank you for your review! We're glad you're enjoying our product.",
+    "timestamp": "2025-05-09T13:12:33+05:30",
+    "tags": [
+      "Enterprise",
+      "Easy to use",
+      "bloxone-threat-defense"
+    ],
+    "rating": 5
+  },
+  {
+    "id": 2,
+    "reviewID": 102,
+    "author": "Jane Smith",
+    "platform": "G2",
+    "title": "Mixed feelings about bloxone-threat-defense",
+    "Postcontent": "The bloxone-threat-defense product has good features but the UI needs improvement.",
+    "replyContents": "",
+    "timestamp": "2025-04-09T13:12:33+05:30",
+    "tags": [
+      "Mid-market",
+      "bloxone-threat-defense"
+    ],
+    "rating": 3
+  },
+  {
+    "id": 1,
+    "reviewID": 101,
+    "author": "John Doe",
+    "platform": "G2",
+    "title": "Great experience with bloxone-ddi",
+    "Postcontent": "What do you like best about BloxOne DDI?\nGreat DNS tool and all core network service are centrally managed\n\nWhat do you dislike about BloxOne DDI?\nThe license price is very high and the feeds are limited for threat Intel\n\nWhat problems is BloxOne DDI solving and how is that benefiting you?\nAssits us in protecting the DNS service",
+    "replyContents": "Thank you for your review! We're glad you're enjoying our product.",
+    "timestamp": "2025-05-09T13:12:33+05:30",
+    "tags": [
+      "Enterprise",
+      "Easy to use",
+      "bloxone-ddi"
+    ],
+    "rating": 5
+  },
+  {
+    "id": 2,
+    "reviewID": 102,
+    "author": "Jane Smith",
+    "platform": "G2",
+    "title": "Mixed feelings about bloxone-ddi",
+    "Postcontent": "The bloxone-ddi product has good features but the UI needs improvement.",
+    "replyContents": "",
+    "timestamp": "2025-04-09T13:12:33+05:30",
+    "tags": [
+      "Mid-market",
+      "bloxone-ddi"
+    ],
+    "rating": 3
+  }
+]
