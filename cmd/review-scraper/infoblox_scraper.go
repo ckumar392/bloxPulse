@@ -211,8 +211,7 @@ func createMockReviews(product string) []Review {
 			Author:        "John Doe",
 			Platform:      "G2",
 			Title:         fmt.Sprintf("Great experience with %s", product),
-			PostContent:   fmt.Sprint("What do you like best about BloxOne DDI?\nGreat DNS tool and all core network service are centrally managed\n\nWhat do you dislike about BloxOne DDI?\nThe license price is very high and the feeds are limited for threat Intel\n\nWhat problems is BloxOne DDI solving and how is that benefiting you?\nAssits us in protecting the DNS service"),
-			
+			PostContent:   formatReviewContent("What do you like best about BloxOne DDI?\nGreat DNS tool and all core network service are centrally managed\n\nWhat do you dislike about BloxOne DDI?\nThe license price is very high and the feeds are limited for threat Intel\n\nWhat problems is BloxOne DDI solving and how is that benefiting you?\nAssits us in protecting the DNS service"),
 			ReplyContents: "Thank you for your review! We're glad you're enjoying our product.",
 			Timestamp:     time.Now().Format(time.RFC3339),
 			Tags:          []string{"Enterprise", "Easy to use", product},
