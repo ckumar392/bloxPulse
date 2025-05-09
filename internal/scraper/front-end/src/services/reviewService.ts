@@ -156,6 +156,21 @@ const calculateStats = (): ReviewStats => {
   const totalRating = actualReviews.reduce((sum, review) => sum + (review.rating || 0), 0);
   const reviewsWithRating = actualReviews.filter(r => r.rating !== undefined).length;
   
+  // Add ratings breakdown by star count
+  const ratingsBreakdown: Record<string, number> = {
+    '5': 0,
+    '4': 0,
+    '3': 0,
+    '2': 0,
+    '1': 0
+  };
+  
+  actualReviews.forEach(review => {
+    if (review.rating && review.rating >= 1 && review.rating <= 5) {
+      ratingsBreakdown[review.rating.toString()]++;
+    }
+  });
+  
   const byPlatform: Record<Platform, number> = {
     'Gartner': 0,
     'G2': 0,
@@ -243,6 +258,7 @@ const calculateStats = (): ReviewStats => {
     byPlatform,
     byDepartment,
     byProduct,
+    ratingsBreakdown,
     recentTrend: positiveCount > negativeCount ? 'up' : negativeCount > positiveCount ? 'down' : 'stable'
   };
 };

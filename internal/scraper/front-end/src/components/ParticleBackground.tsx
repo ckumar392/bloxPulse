@@ -53,15 +53,15 @@ const ParticleBackground: React.FC = () => {
       const particles: Particle[] = [];
 
       // Create fewer particles for a cleaner look
-      for (let i = 0; i < 40; i++) {
+      for (let i = 0; i < 400; i++) {
         particles.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
           size: Math.random() * 2 + 0.5, // Smaller particles
-          speedX: (Math.random() - 0.5) * 0.3, // Slower movement
-          speedY: (Math.random() - 0.5) * 0.3,
+          speedX: (Math.random() - 0.5) * 3.0, // Slower movement
+          speedY: (Math.random() - 0.5) * 3.0,
           color: particleColors[Math.floor(Math.random() * particleColors.length)],
-          opacity: Math.random() * 0.5 + 0.1 // Variable opacity
+          opacity: Math.random() * 0.5 + 3.0 // Variable opacity
         });
       }
 
