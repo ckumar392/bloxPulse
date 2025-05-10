@@ -144,7 +144,8 @@ const actualReviews: Review[] = (enrichedReviewsData as EnrichedReview[]).map(re
   url: '', // No URL in the JSON data, set to empty string
   highlights: [], // No highlights in the JSON data, set to empty array
   tags: review.tags || [],
-  isProcessed: !review.needsAction // Inverse of needsAction
+  isProcessed: !review.needsAction, // Inverse of needsAction
+  needsAction: review.needsAction // Set needsAction directly
 }));
 
 // Calculate stats based on the actual reviews

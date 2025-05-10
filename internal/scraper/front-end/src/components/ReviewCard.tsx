@@ -15,7 +15,7 @@ const ReviewCardContainer = styled(Card)(({ theme }) => ({
   transition: 'transform 0.3s ease, box-shadow 0.3s ease',
   height: '100%',
   position: 'relative',
-  overflow: 'hidden',
+  overflow: 'visible', // Changed from 'hidden' to allow the action indicator to overflow
   boxShadow: '0 6px 20px rgba(0, 0, 0, 0.06)',
   '&:hover': {
     transform: 'translateY(-5px)',
@@ -28,6 +28,7 @@ const CardContentStyled = styled(CardContent)(({ theme }) => ({
   height: '100%',
   display: 'flex',
   flexDirection: 'column',
+  paddingTop: theme.spacing(4), // Add more padding to the top to avoid overlap with the action indicator
 }));
 
 const PlatformAvatar = styled(Avatar)<{ platform: string }>(({ platform, theme }) => {
@@ -147,6 +148,23 @@ const ReviewHeader = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(2),
 }));
 
+// New component for the action indicator
+const ActionIndicator = styled(Box)(({ theme }) => ({
+  position: 'absolute',
+  top: -12,
+  left: 0,
+  backgroundColor: colors.error,
+  color: 'white',
+  borderRadius: '16px',
+  padding: '6px 15px',
+  fontSize: '0.75rem',
+  fontWeight: 'bold',
+  boxShadow: '0 3px 6px rgba(244, 67, 54, 0.4)',
+  zIndex: 5,
+  textTransform: 'uppercase',
+  letterSpacing: '0.5px'
+}));
+
 interface ReviewCardProps {
   review: Review;
   index: number;
@@ -195,9 +213,13 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ review, index, onClick }) => {
           />
         )}
 
+        {review.needsAction && (
+          <ActionIndicator>Action Required</ActionIndicator>
+        )}
+
         <CardContentStyled>
           <ReviewHeader>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', position: 'relative', pl: review.needsAction ? 0 : 0 }}>
               <PlatformAvatar platform={review.platform}>
                 {getPlatformInitials(review.platform)}
               </PlatformAvatar>
@@ -240,16 +262,6 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ review, index, onClick }) => {
                 label={review.department} 
                 size="small" 
                 variant="outlined"
-              />
-            )}
-
-            {review.needsAction && (
-              <Chip 
-                label="Needs Action" 
-                size="small"
-                color="error"
-                variant="outlined"
-                sx={{ height: '24px', fontSize: '0.7rem' }}
               />
             )}
           </Box>
@@ -329,20 +341,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ review, index, onClick }) => {
           )}
         </CardContentStyled>
 
-        <motion.div
-          style={{ 
-            position: 'absolute', 
-            top: 12, 
-            left: 12, 
-            width: 8, 
-            height: 8, 
-            borderRadius: '50%',
-            backgroundColor: review.isProcessed ? colors.success : colors.mediumGray
-          }}
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 0.8 }}
-        />
+        {/* Status dot removed - using the Action Required capsule instead */}
       </ReviewCardContainer>
     </motion.div>
   );

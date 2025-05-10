@@ -16,6 +16,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import InfoIcon from '@mui/icons-material/Info';
 import { colors } from '../theme/theme';
 import ParticleBackground from './ParticleBackground';
+import InfobloxLogo from '../assets/Infoblox_Logo_Primary_RGB 1.svg';
 
 // Constants
 const DRAWER_WIDTH = 260;
@@ -362,9 +363,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           <Box sx={{ flexGrow: 1 }} />
           
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Typography variant="body2" sx={{ display: { xs: 'none', sm: 'block' } }}>
-              Infoblox Review Analysis
-            </Typography>
+            <img 
+              src={InfobloxLogo} 
+              alt="Infoblox Logo" 
+              style={{ height: '24px' }} 
+            />
             <UserAvatar sx={{ display: { xs: 'flex', md: 'none' } }}>A</UserAvatar>
           </Box>
         </Toolbar>

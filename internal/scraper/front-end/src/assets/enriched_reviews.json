@@ -553,5 +553,26 @@
     "department": "Product",
     "product": "BloxOne Threat Defense",
     "needsAction": false
+  },
+  {
+    "id": 5,
+    "reviewID": 6534056,
+    "author": "Sanchit M.",
+    "platform": "G2",
+    "title": "something that needs action",
+    "Postcontent": "What do you like best about BloxOne Threat Defense?\nVisibility , control \u0026 automation to secure the hybrid workplace\n\nWhat do you dislike about BloxOne Threat Defense?\nIncompatible of using it with other DDI VENDOR\n\nWhat problems is BloxOne Threat Defense solving and how is that benefiting you?\nImprove security, effectiveness and resiliency and elevated secops efficiency",
+    "replyContents": "",
+    "timestamp": "2022-04-22T00:00:00",
+    "tags": [
+      "bloxone-threat-defense",
+      "DNS Security Solutions",
+      "Software-Defined Perimeter (SDP)",
+      "Digital Forensics"
+    ],
+    "rating": 4,
+    "sentiment": "Positive",
+    "department": "Product",
+    "product": "BloxOne Threat Defense",
+    "needsAction": true
   }
 ]

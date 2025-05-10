@@ -17,6 +17,7 @@ import { Link, LinkProps } from 'react-router-dom';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SearchIcon from '@mui/icons-material/Search';
 import { colors } from '../theme/theme';
+import InfobloxLogo from '../assets/Infoblox_Logo_Primary_RGB 1.svg';
 
 // Styled components
 const DarkAppBar = styled(AppBar)(({ theme }) => ({
@@ -29,15 +30,12 @@ const DarkAppBar = styled(AppBar)(({ theme }) => ({
 }));
 
 const WhiteLogo = styled('div')({
-  fontWeight: 'bold',
-  fontSize: '1.6rem',
-  color: colors.white,
   display: 'flex',
   alignItems: 'center',
-  letterSpacing: '-0.5px',
   '& img': {
-    height: '30px',
-    marginRight: '12px',
+    height: '38px',
+    filter: 'brightness(0) invert(1)', // Makes the logo white for the dark navbar
+    transition: 'all 0.3s ease',
   },
 });
 
@@ -100,13 +98,13 @@ const Navbar: React.FC<NavbarProps> = ({ onMenuClick }) => {
           {/* Left side - Logo */}
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <WhiteLogo>
-              <motion.span
+              <motion.img
+                src={InfobloxLogo}
+                alt="Infoblox Logo"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5 }}
-              >
-                BloxPulse
-              </motion.span>
+              />
             </WhiteLogo>
           </Box>
           
