@@ -223,7 +223,39 @@ type EnrichOptions struct {
 	OutputFile  string
 	OfflineMode bool
 }
+func formatReviewContent(content string) string {
+	// Remove questions and consolidate answers into a single paragraph
 
+	// Common question patterns to identify and remove - add more as needed
+	questionPatterns := []string{
+		"What do you like best about",
+		"What do you dislike about",
+		"What problems is",
+		"solving and how is that benefiting you",
+	}
+
+	// Work with each line
+	lines := strings.Split(content, "\n")
+	var resultLines []string
+
+	for _, line := range lines {
+		// Skip question lines
+		skipLine := false
+		for _, pattern := range questionPatterns {
+			if strings.Contains(line, pattern) {
+				skipLine = true
+				break
+			}
+		}
+
+		if !skipLine && strings.TrimSpace(line) != "" {
+			resultLines = append(resultLines, strings.TrimSpace(line))
+		}
+	}
+
+	// Join all content with spaces
+	return strings.Join(resultLines, " ")
+}
 // Run performs the enrichment operation with the given options
 func Run(options EnrichOptions) error {
 	log.Println("Starting Review Enrichment Process...")
@@ -350,7 +382,7 @@ func Run(options EnrichOptions) error {
 			Platform:      inputReview.Platform,
 			Title:         inputReview.Title,
 			Postcontent:   inputReview.Postcontent,
-			ReplyContents: inputReview.ReplyContents,
+			ReplyContents: formatReviewContent(inputReview.ReplyContents),
 			Timestamp:     inputReview.Timestamp,
 			Tags:          inputReview.Tags,
 			Rating:        inputReview.Rating,
