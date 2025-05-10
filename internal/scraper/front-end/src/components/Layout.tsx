@@ -17,6 +17,7 @@ import InfoIcon from '@mui/icons-material/Info';
 import { colors } from '../theme/theme';
 import ParticleBackground from './ParticleBackground';
 import InfobloxLogo from '../assets/Infoblox_Logo_Primary_RGB 1.svg';
+import BloxPulseLogo from '../assets/bloxpulse-logo.png';
 
 // Constants
 const DRAWER_WIDTH = 260;
@@ -174,6 +175,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               transition={{ duration: 0.2 }}
             >
               <Logo>
+                <img 
+                  src={BloxPulseLogo} 
+                  alt="BloxPulse Logo" 
+                  style={{ height: '36px', marginRight: '10px' }} 
+                />
                 <span>BloxPulse</span>
               </Logo>
             </motion.div>
@@ -350,15 +356,13 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               <MenuIcon />
             </IconButton>
           )}
-          <Logo>
-            {!open || isMobile ? (
-              <>
-                <span>BloxPulse</span>
-              </>
-            ) : (
-              <span>&nbsp;</span>
-            )}
-          </Logo>
+          <Box>
+            <img 
+              src={BloxPulseLogo} 
+              alt="BloxPulse Logo" 
+              style={{ height: '48px' }} 
+            />
+          </Box>
           
           <Box sx={{ flexGrow: 1 }} />
           
