@@ -1,147 +1,356 @@
-# BloxPulse
+# 🔍 BloxPulse
 
-BloxPulse is a comprehensive platform for monitoring, analyzing, and managing customer feedback across multiple review platforms. It combines powerful data collection capabilities with AI-driven analysis to transform customer reviews into actionable insights, helping teams respond to customer feedback promptly and effectively.
+<div align="center">
 
 ![BloxPulse Logo](internal/scraper/front-end/src/assets/bloxpulse-logo.png)
 
-## Overview
+[![License: Proprietary](https://img.shields.io/badge/License-Proprietary-blue.svg)](LICENSE)
+[![Platform](https://img.shields.io/badge/platform-Go%20|%20Node.js%20|%20React-brightgreen.svg)](https://github.com/Infoblox-CTO/bloxPulse)
+[![AI Powered](https://img.shields.io/badge/AI-Powered-orange.svg)](https://github.com/Infoblox-CTO/bloxPulse)
+
+**Transform customer feedback into actionable insights with BloxPulse's AI-driven analysis platform**
+
+[Features](#features) • [Installation](#installation) • [Usage](#usage) • [API](#rest-api-reference) • [Contributing](#contributing) • [Documentation](#documentation) • [License](#license)
+
+</div>
+
+BloxPulse is a comprehensive platform for monitoring, analyzing, and managing customer feedback across multiple review platforms. It combines powerful data collection capabilities with AI-driven analysis to transform customer reviews into actionable insights, helping teams respond to customer feedback promptly and effectively.
+
+## 🌟 Overview
+
+<div align="center">
+    <img src="https://via.placeholder.com/800x400.png?text=BloxPulse+Dashboard+Preview" alt="BloxPulse Dashboard Preview" width="80%" />
+</div>
 
 BloxPulse is designed specifically for tracking and analyzing reviews of Infoblox products such as BloxOne DDI, NIOS, BloxOne Threat Defense, and other solutions in the Infoblox product portfolio. The system uses AI to determine sentiment, categorize feedback by department, identify which product is being discussed, and flag high-priority issues that need immediate attention.
 
-## Features
+## ✨ Features
 
-- **Advanced Review Collection**
-  - Scrape reviews from multiple platforms including G2, Gartner, TrustRadius, PeerSpot, and social media
-  - Support for all Infoblox product lines (BloxOne platform, NIOS, Threat Defense, etc.)
-  - Scheduled periodic scraping with configurable intervals
-  - Intelligent filtering to focus on relevant content
+<div class="features-container" style="display: flex; justify-content: space-between; flex-wrap: wrap;">
 
-- **AI-Powered Analysis**
-  - Multiple analysis modes (OpenAI, Azure OpenAI, Google, AWS)
-  - Accurate sentiment analysis (Positive, Neutral, Negative)
-  - Automatic product identification and classification
-  - Intelligent department routing (Product, Engineering, Support, Sales, General)
-  - Priority flagging for reviews requiring immediate attention
+<div class="feature-card" style="width: 30%; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+<h3>🔎 Advanced Review Collection</h3>
 
-- **Modern Interactive Dashboard**
-  - Beautiful, responsive UI built with React and Material UI
-  - Real-time analytics and trend visualization
-  - Detailed review browsing and filtering capabilities
-  - Platform and product distribution analytics
-  - Sentiment tracking and monitoring
+- Scrape reviews from multiple platforms including G2, Gartner, TrustRadius, PeerSpot, and social media
+- Support for all Infoblox product lines (BloxOne platform, NIOS, Threat Defense, etc.)
+- Scheduled periodic scraping with configurable intervals
+- Intelligent filtering to focus on relevant content
 
-## Architecture
+<div align="center">
+    <img src="https://via.placeholder.com/250x150.png?text=Review+Collection" alt="Review Collection" width="100%" />
+</div>
+</div>
+
+<div class="feature-card" style="width: 30%; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+<h3>🧠 AI-Powered Analysis</h3>
+
+- Multiple analysis modes (OpenAI, Azure OpenAI, Google, AWS)
+- Accurate sentiment analysis (Positive, Neutral, Negative)
+- Automatic product identification and classification
+- Intelligent department routing (Product, Engineering, Support, Sales, General)
+- Priority flagging for reviews requiring immediate attention
+
+<div align="center">
+    <img src="https://via.placeholder.com/250x150.png?text=AI+Analysis" alt="AI Analysis" width="100%" />
+</div>
+</div>
+
+<div class="feature-card" style="width: 30%; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+<h3>📊 Modern Interactive Dashboard</h3>
+
+- Beautiful, responsive UI built with React and Material UI
+- Real-time analytics and trend visualization
+- Detailed review browsing and filtering capabilities
+- Platform and product distribution analytics
+- Sentiment tracking and monitoring
+
+<div align="center">
+    <img src="https://via.placeholder.com/250x150.png?text=Dashboard+UI" alt="Dashboard UI" width="100%" />
+</div>
+</div>
+
+</div>
+
+## 🏗️ Architecture
 
 BloxPulse follows a scalable, modular architecture designed for reliability and extensibility:
 
+<div align="center">
+    <img src="https://via.placeholder.com/800x400.png?text=BloxPulse+Architecture+Diagram" alt="BloxPulse Architecture Diagram" width="80%" />
+</div>
+
 ### Backend Components
 
-- **Review Scraper**: A powerful engine for collecting reviews from various platforms
-  - Supports G2, Gartner, TrustRadius, and other review sites
-  - Built with concurrent request handling for optimal performance
-  - Rate limiting and retry mechanisms to ensure reliable data collection
+<details>
+<summary><b>🔍 Review Scraper</b>: A powerful engine for collecting reviews from various platforms</summary>
+<br>
 
-- **Review Enricher**: AI-powered analysis engine
-  - Integrates with multiple AI providers (OpenAI, Azure, etc.)
-  - Performs sentiment analysis on review content
-  - Identifies products mentioned in reviews
-  - Routes issues to appropriate departments
-  - Flags high-priority issues needing immediate attention
+- Supports G2, Gartner, TrustRadius, and other review sites
+- Built with concurrent request handling for optimal performance
+- Rate limiting and retry mechanisms to ensure reliable data collection
 
-- **API Server**: RESTful API layer providing endpoints for:
-  - Review retrieval and filtering
-  - Analytics and statistics
-  - Manual scraping triggers
-  - Configuration management
+<div align="center">
+    <img src="https://via.placeholder.com/600x200.png?text=Scraper+Flow+Diagram" alt="Scraper Flow" width="70%" />
+</div>
+</details>
+
+<details>
+<summary><b>🧠 Review Enricher</b>: AI-powered analysis engine</summary>
+<br>
+
+- Integrates with multiple AI providers (OpenAI, Azure, etc.)
+- Performs sentiment analysis on review content
+- Identifies products mentioned in reviews
+- Routes issues to appropriate departments
+- Flags high-priority issues needing immediate attention
+
+<div align="center">
+    <img src="https://via.placeholder.com/600x200.png?text=AI+Enrichment+Process" alt="AI Enrichment Process" width="70%" />
+</div>
+</details>
+
+<details>
+<summary><b>🔌 API Server</b>: RESTful API layer providing endpoints for:</summary>
+<br>
+
+- Review retrieval and filtering
+- Analytics and statistics
+- Manual scraping triggers
+- Configuration management
+
+<div align="center">
+    <img src="https://via.placeholder.com/600x200.png?text=API+Endpoints+Overview" alt="API Endpoints" width="70%" />
+</div>
+</details>
 
 ### Frontend Dashboard
 
-- **React SPA**: Modern single-page application with:
-  - Responsive design for desktop and mobile
-  - Interactive charts and visualizations
-  - Review browsing interface with filtering capabilities
-  - Dashboard for key metrics and trends
+<div align="center">
+    <img src="https://via.placeholder.com/800x400.png?text=BloxPulse+Dashboard+UI" alt="Dashboard UI" width="80%" />
+</div>
 
-- **UI Features**:
-  - Animated transitions for enhanced user experience
-  - Real-time data updates
-  - Particle background for visual appeal
-  - Light/dark theme support
+<details>
+<summary><b>🖥️ React SPA</b>: Modern single-page application with:</summary>
+<br>
 
-## Requirements
+- Responsive design for desktop and mobile
+- Interactive charts and visualizations
+- Review browsing interface with filtering capabilities
+- Dashboard for key metrics and trends
+
+<div align="center">
+    <img src="https://via.placeholder.com/600x200.png?text=Responsive+UI+Demo" alt="Responsive UI Demo" width="70%" />
+</div>
+</details>
+
+<details>
+<summary><b>🎨 UI Features</b>: Beautiful user experience elements</summary>
+<br>
+
+- Animated transitions for enhanced user experience
+- Real-time data updates
+- Particle background for visual appeal
+- Light/dark theme support
+
+<div align="center">
+    <img src="https://via.placeholder.com/600x200.png?text=UI+Features+Demo" alt="UI Features Demo" width="70%" />
+</div>
+</details>
+
+## 📋 Requirements
+
+<div class="requirements-container" style="display: flex; justify-content: space-between; flex-wrap: wrap;">
+
+<div class="requirement-column" style="width: 48%;">
 
 ### Core Dependencies
 
-- **Go 1.16+**: For the backend services
-- **Node.js 16+**: For building the frontend dashboard
-- **React 18**: The frontend framework
-- **Material UI**: Component library for the dashboard
-- **Framer Motion**: For advanced animations
+<table>
+  <tr>
+    <th>Dependency</th>
+    <th>Version</th>
+    <th>Purpose</th>
+  </tr>
+  <tr>
+    <td><img src="https://via.placeholder.com/20x20.png?text=Go" alt="Go" /> Go</td>
+    <td>1.16+</td>
+    <td>Backend services</td>
+  </tr>
+  <tr>
+    <td><img src="https://via.placeholder.com/20x20.png?text=Node" alt="Node.js" /> Node.js</td>
+    <td>16+</td>
+    <td>Frontend dashboard</td>
+  </tr>
+  <tr>
+    <td><img src="https://via.placeholder.com/20x20.png?text=React" alt="React" /> React</td>
+    <td>18</td>
+    <td>Frontend framework</td>
+  </tr>
+  <tr>
+    <td><img src="https://via.placeholder.com/20x20.png?text=MUI" alt="Material UI" /> Material UI</td>
+    <td>Latest</td>
+    <td>Component library</td>
+  </tr>
+  <tr>
+    <td><img src="https://via.placeholder.com/20x20.png?text=FM" alt="Framer Motion" /> Framer Motion</td>
+    <td>Latest</td>
+    <td>Animations</td>
+  </tr>
+</table>
+
+</div>
+
+<div class="requirement-column" style="width: 48%;">
 
 ### Access Requirements (Optional)
 
-- **RapidAPI Key**: For accessing review platforms via API
-- **OpenAI API Key** or **Azure OpenAI Key**: For AI-powered analysis
-- **SMTP Server**: For email notifications (optional)
-- **Slack Webhook**: For Slack notifications (optional)
+<table>
+  <tr>
+    <th>Requirement</th>
+    <th>Purpose</th>
+  </tr>
+  <tr>
+    <td><img src="https://via.placeholder.com/20x20.png?text=API" alt="RapidAPI" /> RapidAPI Key</td>
+    <td>Access review platforms</td>
+  </tr>
+  <tr>
+    <td><img src="https://via.placeholder.com/20x20.png?text=AI" alt="OpenAI/Azure" /> OpenAI/Azure Key</td>
+    <td>AI-powered analysis</td>
+  </tr>
+  <tr>
+    <td><img src="https://via.placeholder.com/20x20.png?text=Mail" alt="SMTP" /> SMTP Server</td>
+    <td>Email notifications</td>
+  </tr>
+  <tr>
+    <td><img src="https://via.placeholder.com/20x20.png?text=Slack" alt="Slack" /> Slack Webhook</td>
+    <td>Slack notifications</td>
+  </tr>
+</table>
 
-## Installation
+</div>
+</div>
+
+## 🚀 Installation
+
+<div align="center">
+    <img src="https://via.placeholder.com/800x150.png?text=Installation+Process" alt="Installation Process" width="80%" />
+</div>
 
 ### Backend Setup
 
-1. **Clone the Repository**:
+<details open>
+<summary><b>Step 1: Clone the Repository</b></summary>
+<br>
 
 ```bash
 git clone https://github.com/Infoblox-CTO/bloxPulse.git
 cd bloxPulse
 ```
 
-2. **Install Go Dependencies**:
+<div align="center">
+    <img src="https://via.placeholder.com/600x100.png?text=Cloning+Repository" alt="Cloning Repository" width="70%" />
+</div>
+</details>
+
+<details>
+<summary><b>Step 2: Install Go Dependencies</b></summary>
+<br>
 
 ```bash
 go mod download
 go mod verify
 ```
 
-3. **Configure the Application**:
+<div align="center">
+    <img src="https://via.placeholder.com/600x100.png?text=Installing+Dependencies" alt="Installing Dependencies" width="70%" />
+</div>
+</details>
+
+<details>
+<summary><b>Step 3: Configure the Application</b></summary>
+<br>
 
 ```bash
 cp configs/config.sample.json configs/config.json
 ```
 
-4. **Edit Configuration**:
+<div align="center">
+    <img src="https://via.placeholder.com/600x150.png?text=Configuration+Process" alt="Configuration Process" width="70%" />
+</div>
+</details>
+
+<details>
+<summary><b>Step 4: Edit Configuration</b></summary>
+<br>
    
-   Open `configs/config.json` in your preferred editor and configure:
-   - API keys for review platforms
-   - AI provider credentials (OpenAI/Azure)
-   - Department routing rules
-   - Notification settings
-   
-5. **Build the Application**:
+Open `configs/config.json` in your preferred editor and configure:
+- API keys for review platforms
+- AI provider credentials (OpenAI/Azure)
+- Department routing rules
+- Notification settings
+
+<div align="center">
+    <img src="https://via.placeholder.com/600x150.png?text=Config+File+Example" alt="Config File Example" width="70%" />
+</div>
+</details>
+
+<details>
+<summary><b>Step 5: Build the Application</b></summary>
+<br>
 
 ```bash
 go build -o bloxpulse main.go
 ```
 
+<div align="center">
+    <img src="https://via.placeholder.com/600x100.png?text=Build+Process" alt="Build Process" width="70%" />
+</div>
+</details>
+
 ### Frontend Setup
 
-1. **Navigate to Frontend Directory**:
+<div align="center">
+    <img src="https://via.placeholder.com/800x150.png?text=Frontend+Setup+Process" alt="Frontend Setup Process" width="80%" />
+</div>
+
+<details open>
+<summary><b>Step 1: Navigate to Frontend Directory</b></summary>
+<br>
 
 ```bash
 cd internal/scraper/front-end
 ```
 
-2. **Install NPM Dependencies**:
+<div align="center">
+    <img src="https://via.placeholder.com/600x100.png?text=Navigate+to+Frontend" alt="Navigate to Frontend" width="70%" />
+</div>
+</details>
+
+<details>
+<summary><b>Step 2: Install NPM Dependencies</b></summary>
+<br>
 
 ```bash
 npm install
 ```
 
-3. **Build the Frontend**:
+<div align="center">
+    <img src="https://via.placeholder.com/600x100.png?text=Installing+NPM+Packages" alt="Installing NPM Packages" width="70%" />
+</div>
+</details>
+
+<details>
+<summary><b>Step 3: Build the Frontend</b></summary>
+<br>
 
 ```bash
 npm run build
 ```
+
+<div align="center">
+    <img src="https://via.placeholder.com/600x100.png?text=Building+Frontend" alt="Building Frontend" width="70%" />
+</div>
+</details>
 
 ## Configuration
 
@@ -214,6 +423,54 @@ The system will:
    - Start the API server
    - Make enriched reviews available via API
    - Serve the frontend dashboard for visualization
+
+### Running the Frontend and Backend Separately
+
+<div align="center">
+    <img src="https://via.placeholder.com/800x150.png?text=Development+Environment+Setup" alt="Development Environment Setup" width="80%" />
+</div>
+
+You can also run the frontend and backend components separately for development:
+
+<div class="setup-cards" style="display: flex; justify-content: space-between; flex-wrap: wrap;">
+
+<div class="setup-card" style="width: 48%; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+
+#### 🖥️ Running the Backend Server
+
+To start the backend server:
+
+```bash
+cd internal/scraper/front-end
+node server.js
+```
+
+This will start the Node.js server that handles API requests and serves the frontend assets.
+
+<div align="center">
+    <img src="https://via.placeholder.com/350x200.png?text=Backend+Server+Running" alt="Backend Server Running" width="100%" />
+</div>
+</div>
+
+<div class="setup-card" style="width: 48%; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+
+#### 🎨 Running the Frontend in Development Mode
+
+To start the frontend UI in development mode with hot-reloading:
+
+```bash
+cd internal/scraper/front-end
+npm start
+```
+
+This will launch the React development server at [http://localhost:3000](http://localhost:3000), allowing you to work on the frontend with live updates as you edit the code.
+
+<div align="center">
+    <img src="https://via.placeholder.com/350x200.png?text=Frontend+Development+Mode" alt="Frontend Development Mode" width="100%" />
+</div>
+</div>
+
+</div>
 
 ## Working with BloxPulse
 
